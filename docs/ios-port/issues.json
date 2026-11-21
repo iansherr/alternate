@@ -1,0 +1,741 @@
+{
+  "schema_version": 1,
+  "created": "2026-11-21",
+  "repo": "iansherr/alternate",
+  "upstream": "BioHazard786/Alternate",
+  "baseline_commit": "a434f408fd693332948e67183620797a6019ab8e",
+  "state": "planning_only_issue_tracker_disabled",
+  "issues": [
+    {
+      "id": "P0-01",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Capture exact Android 3.2 baseline and upgrade/data fixtures",
+      "deps": [],
+      "scope": "Document Gradle/JDK/SDK, Android build + unit/migration outcomes, schema v5, legacy MMKV import, app identity and APK signing expectations. Record existing caller-screening/overlay and directory behaviors.",
+      "accept": [
+        "Exact-head baseline report with commands and pass/fail outputs",
+        "Android upgrade fixtures and schema evidence retained",
+        "No asserted behavior without evidence"
+      ],
+      "tests": [
+        "assembleDebug; testDebugUnitTest; connectedDebugAndroidTest where device available",
+        "Compare IDs, package/signing, migrated records"
+      ],
+      "notes": "Do not modify shipping Android behavior for this ticket."
+    },
+    {
+      "id": "P0-02",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Approve iOS product charter, parity matrix and non-goals",
+      "deps": [],
+      "scope": "Define iOS local address book, no Apple Contacts writes, offline Caller ID, safe disclosure UX, functional parity, exclusions and MVP milestones.",
+      "accept": [
+        "Matrix covers every Android app screen/phone feature and planned iOS equivalent or explicit unsupported reason",
+        "Definitions of caller labels versus complete contact records and privacy boundaries",
+        "Owner-approved acceptance and scope control"
+      ],
+      "tests": [
+        "Review against upstream README and iOS public API capabilities",
+        "Confirm no unsupported claims about native Phone Recents"
+      ],
+      "notes": "No CRM/cloud/live caller lookup, no Android-style overlay on iOS."
+    },
+    {
+      "id": "P0-03",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Document privacy threat model and security invariants",
+      "deps": [
+        "P0-02"
+      ],
+      "scope": "Model personal data in Room, shared iOS App Group index, OS caller directory, import/export, app lock, backups and logging. Define deletion/revocation and after-reboot behavior.",
+      "accept": [
+        "Dataflow and trust boundaries published",
+        "Minimum identifier+alias caller-index exposure and opt-in designed",
+        "Threat table addresses lock screen, Recents, backups, extension, accidental calls, export, race conditions and stale labels"
+      ],
+      "tests": [
+        "Security design review + real-device test matrix",
+        "Explicit acceptance of iOS platform limitations"
+      ],
+      "notes": "Never assume app lock prevents OS displaying previously registered labels."
+    },
+    {
+      "id": "P0-04",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "KMP/Compose/Room feasibility and component inventory",
+      "deps": [
+        "P0-01",
+        "P0-02"
+      ],
+      "scope": "Audit Android-only imports, Compose Material 3 Expressive and Navigation APIs, Room drivers/KSP, DataStore, Coil, photo/biometrics, Gradle compatibility. Propose reusable versus platform-specific UI boundaries.",
+      "accept": [
+        "File/component compatibility matrix with iOS blockers",
+        "Supported toolchain versions pinned for spike",
+        "Build decision documented, including rollback if native UI simpler"
+      ],
+      "tests": [
+        "Verify Kotlin/Compose/Room/KSP + Xcode compatibility via minimal spike after planning gate",
+        "No production refactor yet"
+      ],
+      "notes": "Migrate from current native Kotlin main, not legacy-expo."
+    },
+    {
+      "id": "P0-05",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Define upstream proposal, issue boundaries and coordination/merge contract",
+      "deps": [
+        "P0-02",
+        "P0-03",
+        "P0-04"
+      ],
+      "scope": "Prepare proposed upstream coordination; protect fork main and Android releases; define small PR carriers, exact-head evidence, dependencies, ownership, and no accidental squash/cross-agent overwrite.",
+      "accept": [
+        "Draft upstream proposal approved before posting externally",
+        "Planning gate includes signoff on issue map and MVP",
+        "Each issue has bounded change list, tests, dependencies and PR handoff fields"
+      ],
+      "tests": [
+        "Check upstream open PRs and #39/#40 before each claim",
+        "Document no-upstream-contact without explicit approval"
+      ],
+      "notes": "No code changes or GitHub upstream mutations in the planning phase."
+    },
+    {
+      "id": "P0-06",
+      "phase": "Discovery & governance",
+      "priority": "high",
+      "title": "Define milestone/project board, prioritization and ready/done gates",
+      "deps": [
+        "P0-05"
+      ],
+      "scope": "Create tracker columns, phases, risk/priority/owner fields, blocked rules, issue ID links, complete workstream inventory and milestone exit criteria.",
+      "accept": [
+        "All scoped tickets indexed exactly once",
+        "Dependency graph acyclic and phased",
+        "Ready/Doing/In review/Blocked/Landed validated against exact SHA, not only green CI"
+      ],
+      "tests": [
+        "Roadmap audit with all tickets and tracked source of truth",
+        "Periodic upstream drift review"
+      ],
+      "notes": "GitHub Projects requires separate API/tool access; Markdown board serves as source until linked."
+    },
+    {
+      "id": "KMP-01",
+      "phase": "Kotlin shared core",
+      "priority": "critical",
+      "title": "Add additive KMP skeleton and iOS compilation target",
+      "deps": [
+        "P0-01",
+        "P0-04",
+        "P0-05"
+      ],
+      "scope": "Introduce shared module and source sets without removing existing Android application or changing package ID, signing or releases.",
+      "accept": [
+        "Android existing task graph operational",
+        "Shared pure Kotlin file compiles for Android/iOS simulator",
+        "Baseline Android behavior unchanged"
+      ],
+      "tests": [
+        "assembleDebug + unit tests + compileKotlinIosSimulatorArm64 (or documented equivalent)",
+        "Diff Gradle lock/dependency graph"
+      ],
+      "notes": "One isolated, revertible structural PR."
+    },
+    {
+      "id": "KMP-02",
+      "phase": "Kotlin shared core",
+      "priority": "critical",
+      "title": "Extract portable contact, phone, group and caller DTOs",
+      "deps": [
+        "KMP-01"
+      ],
+      "scope": "Move pure model/domain contracts, preserving IDs, multi-phone labels, group membership and conflict semantics.",
+      "accept": [
+        "No Android framework imports in commonMain",
+        "Existing Room schema and serialization maintained",
+        "iOS module consumes identical types"
+      ],
+      "tests": [
+        "Cross-platform model round-trip tests",
+        "Android DB schema diff"
+      ],
+      "notes": "No schema redesign hidden in refactor."
+    },
+    {
+      "id": "KMP-03",
+      "phase": "Kotlin shared core",
+      "priority": "critical",
+      "title": "Share search, filtering, phone normalization and ordering",
+      "deps": [
+        "KMP-02"
+      ],
+      "scope": "Extract search index, alias/name lookup, country defaults, duplicate number policy and iOS E.164-to-numeric mapping.",
+      "accept": [
+        "Identical Android search/filter outputs on fixtures",
+        "Unicode, extension, short-code, national/international ambiguities and collisions covered",
+        "Deterministic iOS sorted-number contract"
+      ],
+      "tests": [
+        "Golden fixture tests on Android and iOS",
+        "Fuzz malformed phone inputs"
+      ],
+      "notes": "Avoid silent truncation or wrong caller labels."
+    },
+    {
+      "id": "KMP-04",
+      "phase": "Kotlin shared core",
+      "priority": "high",
+      "title": "Share vCard parser/exporter and adversarial fixtures",
+      "deps": [
+        "KMP-02"
+      ],
+      "scope": "Move pure VCF transformation logic; leave platform file pickers and share sheets as adapters.",
+      "accept": [
+        "Multiple phone numbers, Unicode, notes, photo references and supported groups preserved",
+        "Bad or huge VCF treated as untrusted",
+        "No silent merge or network activity"
+      ],
+      "tests": [
+        "Golden VCF 3/4 import-export round trips",
+        "Malformed and hostile input tests"
+      ],
+      "notes": "Do not overlap upstream #40 request for broader formats/backups."
+    },
+    {
+      "id": "KMP-05",
+      "phase": "Kotlin shared core",
+      "priority": "critical",
+      "title": "Migrate Room entities, DAOs and database builder safely",
+      "deps": [
+        "KMP-01",
+        "KMP-02",
+        "P0-01"
+      ],
+      "scope": "Make Room models/DAO shared with platform builders and iOS driver; retain existing Android DB location, schema and legacy migrations.",
+      "accept": [
+        "Existing Android DB opens after update without destructive reset",
+        "iOS SQLite CRUD, transaction rollback, cascade and indices work",
+        "Schema v5 and upgrade data retained"
+      ],
+      "tests": [
+        "Android migration test and exported schema diff",
+        "iOS simulator persistence/reopen/cascade tests"
+      ],
+      "notes": "Call out Android-specific SupportSQLite migration and platform rewrite where needed."
+    },
+    {
+      "id": "KMP-06",
+      "phase": "Kotlin shared core",
+      "priority": "critical",
+      "title": "Share repository and Flow-based contact use cases",
+      "deps": [
+        "KMP-03",
+        "KMP-05"
+      ],
+      "scope": "Share reactive CRUD, grouped membership, favorites, search and indexed lookup; preserve threading, ordering and error cases.",
+      "accept": [
+        "Both platforms use one domain contract",
+        "Duplicate number and transactional update behavior deterministic",
+        "No duplicate repositories for same data path"
+      ],
+      "tests": [
+        "Shared repository contract and concurrency tests",
+        "Android UI behavior parity acceptance"
+      ],
+      "notes": "Protect main against simultaneous duplicate domain changes."
+    },
+    {
+      "id": "KMP-07",
+      "phase": "Kotlin shared core",
+      "priority": "high",
+      "title": "Define secure platform preferences, key, biometric and clock adapters",
+      "deps": [
+        "KMP-01",
+        "P0-03"
+      ],
+      "scope": "Keep Android DataStore/lock migration and provide iOS Keychain/LocalAuthentication semantics; clean platform-independent state transitions.",
+      "accept": [
+        "Platform contracts documented and testable",
+        "PIN/biometric material excluded from caller ID index",
+        "Android existing PIN/reset/lock behavior unchanged"
+      ],
+      "tests": [
+        "Lock-out timing, force-lock, restart, retry, biometric fallback tests"
+      ],
+      "notes": "Security review before reusing existing PIN hashing design."
+    },
+    {
+      "id": "KMP-08",
+      "phase": "Kotlin shared core",
+      "priority": "high",
+      "title": "Separate photo/file system dependencies from shared data and VCF",
+      "deps": [
+        "KMP-02",
+        "KMP-04"
+      ],
+      "scope": "Define portable metadata, photo lifecycle interfaces and file IO adapters, not android Context/Bitmap/Uri in commonMain.",
+      "accept": [
+        "Photo references durable and deletions clean artifacts",
+        "No unsafe path traversal or excessive image allocation",
+        "Export uses explicit destination and temporary-file cleanup"
+      ],
+      "tests": [
+        "Photo roundtrip and adversarial image tests on both platforms"
+      ],
+      "notes": "No remote avatar storage."
+    },
+    {
+      "id": "KMP-09",
+      "phase": "Kotlin shared core",
+      "priority": "high",
+      "title": "Audit and extract interoperable Compose UI primitives",
+      "deps": [
+        "P0-04",
+        "KMP-01",
+        "KMP-06"
+      ],
+      "scope": "Identify Material3 Expressive, platform-local Context, Android Navigation, back handling, fonts and animations. Extract proven compatible controls.",
+      "accept": [
+        "One contact card and theme render on iOS without degrading Android",
+        "Compatibility fallbacks recorded for unsupported components",
+        "UI architecture agreed before broad migration"
+      ],
+      "tests": [
+        "iOS simulator screenshots/accessibility sizes and Android screenshot comparisons"
+      ],
+      "notes": "UI parity can be functional rather than pixel-identical."
+    },
+    {
+      "id": "IOS-01",
+      "phase": "iOS application",
+      "priority": "critical",
+      "title": "Create iOS Xcode shell and Kotlin bridge",
+      "deps": [
+        "KMP-01",
+        "P0-03",
+        "P0-04"
+      ],
+      "scope": "Add minimal Xcode target, Compose host or native wrapper, bundle IDs, supported iOS floor, code signing and simulator entry point.",
+      "accept": [
+        "Build and launch on iOS simulator with shared code",
+        "Android build remains unchanged",
+        "Signing/entitlement prerequisites documented"
+      ],
+      "tests": [
+        "xcodebuild with pinned versions",
+        "Simulator smoke test"
+      ],
+      "notes": "No silent network SDKs."
+    },
+    {
+      "id": "IOS-02",
+      "phase": "iOS application",
+      "priority": "critical",
+      "title": "Build contact list, detail, groups, favorites and search",
+      "deps": [
+        "IOS-01",
+        "KMP-06",
+        "KMP-09"
+      ],
+      "scope": "Render local data and navigation from shared Flow; support empty/error/loading and search in iPhone screens.",
+      "accept": [
+        "Search by name/number/notes with parity",
+        "Multi-number and groups readable",
+        "No Apple Contacts permission required for ordinary viewing"
+      ],
+      "tests": [
+        "Simulator UI test with Unicode/long lists and persistence",
+        "VoiceOver and Dynamic Type baseline"
+      ],
+      "notes": "iOS system Phone Recents data is not programmatically exposed by public API."
+    },
+    {
+      "id": "IOS-03",
+      "phase": "iOS application",
+      "priority": "critical",
+      "title": "Implement contact CRUD and deliberate outgoing-call action",
+      "deps": [
+        "IOS-02",
+        "KMP-06"
+      ],
+      "scope": "Add/edit/delete contacts, groups, favorites, multiple numbers and duplicate resolution; confirm before launching dial action.",
+      "accept": [
+        "All edits persist and propagate to index refresh adapter",
+        "No automatic write to Apple Contacts",
+        "Accidental dial protection when originating within Alternate"
+      ],
+      "tests": [
+        "Real-device CRUD and restart tests",
+        "Duplicate multi-number regression and confirmation UX tests"
+      ],
+      "notes": "Cannot prevent tapping an existing native Phone Recents item."
+    },
+    {
+      "id": "IOS-04",
+      "phase": "iOS application",
+      "priority": "high",
+      "title": "Native document/photo import/export and disclosure controls",
+      "deps": [
+        "IOS-03",
+        "KMP-04",
+        "KMP-08"
+      ],
+      "scope": "Implement file/UIDocumentPicker, image picker, explicit contact selection, share sheet, sanitized temp files and import conflict flow.",
+      "accept": [
+        "vCard import/export with user confirmation",
+        "No implicit Apple Contacts or iCloud sync",
+        "Invalid or massive file fails safely and temporary export cleaned"
+      ],
+      "tests": [
+        "Cross-platform VCF fixture suite",
+        "Photos and Unicode roundtrip tests",
+        "Sandbox/file security tests"
+      ],
+      "notes": "No automatic sync in MVP."
+    },
+    {
+      "id": "IOS-05",
+      "phase": "iOS application",
+      "priority": "critical",
+      "title": "Face ID/Keychain lock and privacy snapshot behavior",
+      "deps": [
+        "IOS-01",
+        "KMP-07",
+        "P0-03"
+      ],
+      "scope": "Use iOS native auth/Keychain and lifecycle lock, hide data in task switcher, protect clipboard or export warnings.",
+      "accept": [
+        "Locked UI content not visible via app switcher",
+        "Graceful biometric failures and fallback",
+        "After reboot/reinstall behavior documented"
+      ],
+      "tests": [
+        "Physical device test for lock, wake, task switcher, Face ID retries and force-lock"
+      ],
+      "notes": "App lock does not revoke previously registered Call Directory labels."
+    },
+    {
+      "id": "IOS-06",
+      "phase": "iOS application",
+      "priority": "high",
+      "title": "Setup, permission guide and user privacy settings",
+      "deps": [
+        "IOS-02",
+        "P0-02",
+        "P0-03"
+      ],
+      "scope": "Explain native caller-ID enablement, local-only boundary, lock, index opt-in/out and disclosure limitations.",
+      "accept": [
+        "Accessible and accurate setup screens",
+        "User can opt out and clear exported index; no hidden enablement",
+        "Caller ID status guides recovery when extension disabled"
+      ],
+      "tests": [
+        "Settings flow integration tests and device walkthrough"
+      ],
+      "notes": "No claim that Call Directory names stay invisible to Apple iOS UI."
+    },
+    {
+      "id": "CID-01",
+      "phase": "iOS caller ID",
+      "priority": "critical",
+      "title": "Design minimal number-to-label index and atomic App Group contract",
+      "deps": [
+        "KMP-03",
+        "KMP-06",
+        "P0-03",
+        "IOS-01"
+      ],
+      "scope": "Design consented projection of selected normalized phone number and caller alias into app-group snapshot with deterministic sorting/deduplication, data protection, versioning and no sensitive fields.",
+      "accept": [
+        "Only minimal number + label present; no notes/address/email/photo",
+        "Atomic revision and deletion semantics",
+        "Handles duplicate aliases, international numbers and locked-state availability"
+      ],
+      "tests": [
+        "Property tests for sort, Int64 normalization, duplicate collision, snapshots and crash/recovery",
+        "Audit app-group file permissions"
+      ],
+      "notes": "Do not put full database, auth keys or PIN into extension's shared container."
+    },
+    {
+      "id": "CID-02",
+      "phase": "iOS caller ID",
+      "priority": "critical",
+      "title": "Implement native Swift CXCallDirectoryProvider extension",
+      "deps": [
+        "CID-01",
+        "IOS-01"
+      ],
+      "scope": "Embed native Call Directory extension to read safe immutable projection, register sorted identification entries, respect cancellation and avoid runtime app/database access.",
+      "accept": [
+        "iOS settings can enable extension",
+        "Identifies one test number with native call UI",
+        "Works while main application not running/locked"
+      ],
+      "tests": [
+        "iPhone signed extension build and real inbound call test",
+        "Error and reload diagnostics sans PII"
+      ],
+      "notes": "This is offline Call Directory, not Live Caller ID server lookup."
+    },
+    {
+      "id": "CID-03",
+      "phase": "iOS caller ID",
+      "priority": "critical",
+      "title": "Implement index update/reload/removal, consent and stale-label recovery",
+      "deps": [
+        "CID-01",
+        "CID-02",
+        "IOS-03"
+      ],
+      "scope": "Connect save/delete/relabel/enable/disable to snapshot generation, CXCallDirectoryManager reload, errors, retry and explicit index clear.",
+      "accept": [
+        "Label updates or deletion reliably remove obsolete registrations",
+        "Opt out clears local index and requests OS reload",
+        "Idempotent snapshot/replay and race handling"
+      ],
+      "tests": [
+        "Physical-device add/change/delete/disable tests and restart/upgrade cycle",
+        "Failure injection on reload"
+      ],
+      "notes": "Do not promise iOS itself immediately flushes Recents or all cached historical caller labels."
+    },
+    {
+      "id": "CID-04",
+      "phase": "iOS caller ID",
+      "priority": "critical",
+      "title": "Real-device acceptance matrix: locks, number formats, reboots and permissions",
+      "deps": [
+        "CID-02",
+        "CID-03",
+        "IOS-05"
+      ],
+      "scope": "Execute signed iPhone tests for app terminated/locked, extension disabled/re-enabled, reboot, unknown caller, malformed/duplicate numbers, privacy exposures.",
+      "accept": [
+        "Verified incoming test caller identification",
+        "Explicit negative case for unknown number",
+        "Data leakage and stale-label behavior recorded honestly"
+      ],
+      "tests": [
+        "Attach device/iOS version, extension status, screenshots excluding PII, logs redacted",
+        "Verify Apple Contacts untouched"
+      ],
+      "notes": "Simulator isn't sufficient to prove incoming-call integration."
+    },
+    {
+      "id": "CID-05",
+      "phase": "iOS caller ID",
+      "priority": "medium",
+      "title": "Optional label formatting, disclosure preferences and multiple numbers",
+      "deps": [
+        "CID-04",
+        "IOS-06"
+      ],
+      "scope": "Explore per-number alias, masked/neutral names, group exclusion, preview of OS-exposed labels and import defaults.",
+      "accept": [
+        "No sensitive notes/addrs copied into labels",
+        "Users can preview identifiers being registered",
+        "Existing tests for normalization and sync remain green"
+      ],
+      "tests": [
+        "Privacy UX tests and alias edge cases"
+      ],
+      "notes": "Optional after basic iOS caller ID works."
+    },
+    {
+      "id": "QA-01",
+      "phase": "Quality/release",
+      "priority": "critical",
+      "title": "CI matrix for Android, KMP iOS simulator, unit, schema and lint",
+      "deps": [
+        "KMP-01",
+        "IOS-01"
+      ],
+      "scope": "Create distinct CI jobs with pinned Android SDK/JDK, macOS/Xcode for iOS, shared tests and migration checks; protect pull requests from false green due to skipped jobs.",
+      "accept": [
+        "Required Android baseline kept; iOS compile/test jobs visible",
+        "No successful workflow can cancel required failure diagnostics",
+        "Exact-head status and cached toolchain defined"
+      ],
+      "tests": [
+        "Deliberate negative test on each mandatory job",
+        "Mac runner expense/capacity and security review"
+      ],
+      "notes": "Do not require self-hosted runner or add needless workflows without approval."
+    },
+    {
+      "id": "QA-02",
+      "phase": "Quality/release",
+      "priority": "critical",
+      "title": "Regression/negative acceptance fixtures for migration and caller ID",
+      "deps": [
+        "KMP-05",
+        "KMP-06",
+        "CID-03"
+      ],
+      "scope": "Build fixtures for no data loss, schema upgrade, 2.x migration, deletion/collision race and privacy boundary, and document how tests fail when broken.",
+      "accept": [
+        "Every critical privacy/data-loss invariant has positive and negative test",
+        "No issue closed until test evidence attached",
+        "Android parity validated at exact-head"
+      ],
+      "tests": [
+        "Migration fixture backups and cross-platform integration tests",
+        "Deliberately corrupt inputs to verify fail-closed"
+      ],
+      "notes": "Keep fixture provenance/expected results stable."
+    },
+    {
+      "id": "QA-03",
+      "phase": "Quality/release",
+      "priority": "high",
+      "title": "Security hardening: import, storage, locks, logging, index and exports",
+      "deps": [
+        "IOS-04",
+        "IOS-05",
+        "CID-04",
+        "P0-03"
+      ],
+      "scope": "Threat-model review plus harden local DB, App Group protection, sensitive logs, key handling, app-switcher snapshots, sanitizing and deletion.",
+      "accept": [
+        "No unnecessary network/analytics permissions",
+        "No raw PII in logs/CI artifacts",
+        "Locked-state and export behaviors meet charter"
+      ],
+      "tests": [
+        "Manual privacy audit, static tests and iOS entitlement review",
+        "Real-device penetration-oriented checklist"
+      ],
+      "notes": "Open-source app means no proprietary audit assumption."
+    },
+    {
+      "id": "QA-04",
+      "phase": "Quality/release",
+      "priority": "high",
+      "title": "Accessibility, localization and UI parity audit",
+      "deps": [
+        "IOS-03",
+        "IOS-06"
+      ],
+      "scope": "Audit TalkBack/VoiceOver, font scaling, focus, keyboard, high contrast, international numbers and RTL; prevent regression of Android UX.",
+      "accept": [
+        "Core flows VoiceOver navigable",
+        "Large text/readable labels and focus order correct",
+        "RTL/Unicode contact handling sound"
+      ],
+      "tests": [
+        "Screen-reader walkthrough, snapshot tests and manual iOS/Android audit"
+      ],
+      "notes": "Material 3 Expressive iOS behavior must be checked, not assumed."
+    },
+    {
+      "id": "QA-05",
+      "phase": "Quality/release",
+      "priority": "high",
+      "title": "Reproducible iOS signing, TestFlight/package plan and release checklist",
+      "deps": [
+        "QA-01",
+        "QA-02",
+        "QA-03",
+        "QA-04"
+      ],
+      "scope": "Document Xcode signing, entitlements, CI provisioning, App Store privacy statements, beta distribution, fork branding and upstream license compliance.",
+      "accept": [
+        "End-to-end clean build and signed device installation documented",
+        "App privacy claims match actual binary/permissions",
+        "Release go/no-go checklist includes privacy and fallback"
+      ],
+      "tests": [
+        "Clean checkout build with pinned toolchain, device smoke test",
+        "Verify extension embedded and enabled"
+      ],
+      "notes": "No release credentials committed; separate upstream brand/trademark discussion."
+    },
+    {
+      "id": "QA-06",
+      "phase": "Quality/release",
+      "priority": "critical",
+      "title": "Upstream contribution handoff, dependency retirement and roadmap closure",
+      "deps": [
+        "QA-05",
+        "P0-05"
+      ],
+      "scope": "Review all issue/PR evidence and determine portable upstream PRs versus iOS-specific fork changes; preserve authorship, exact commit lineage and independent release path.",
+      "accept": [
+        "All critical MVP acceptance checked with evidence",
+        "No open unretired dependent PR or silently squashed behavior",
+        "Maintainer-facing PRs split by bounded scope and approved before upstream posting"
+      ],
+      "tests": [
+        "Trace each release capability to landed PR + tests",
+        "Revalidate upstream status and current branch lineage"
+      ],
+      "notes": "Nothing sent upstream without explicit user approval."
+    },
+    {
+      "id": "OPT-01",
+      "phase": "Optional later",
+      "priority": "optional",
+      "title": "Explore protected local encrypted backup/restore and multi-device sync",
+      "deps": [
+        "QA-03"
+      ],
+      "scope": "Consider privacy-preserving local archives and opt-in sync only after MVP, coordinated with upstream #40.",
+      "accept": [
+        "Separate architecture and threat model approved",
+        "Cloud/network tradeoffs separately consented",
+        "Not on MVP critical path"
+      ],
+      "tests": [
+        "Future design review"
+      ],
+      "notes": "Don't duplicate upstream #40."
+    },
+    {
+      "id": "OPT-02",
+      "phase": "Optional later",
+      "priority": "optional",
+      "title": "Explore multiple profiles and profile-specific caller labels",
+      "deps": [
+        "CID-04"
+      ],
+      "scope": "Investigate separate directories, work/personal profiles and iOS index projection, coordinated with upstream #39.",
+      "accept": [
+        "Isolation and profile switching clearly specified",
+        "No accidental cross-profile caller-label leakage",
+        "Not on MVP critical path"
+      ],
+      "tests": [
+        "Future design and privacy review"
+      ],
+      "notes": "Don't duplicate upstream #39."
+    },
+    {
+      "id": "OPT-03",
+      "phase": "Optional later",
+      "priority": "optional",
+      "title": "Explore enhanced relationship metadata or privacy-preserving contact groups",
+      "deps": [
+        "IOS-03"
+      ],
+      "scope": "Future tags/notes/reminders, richer CRM and optional export aliases, without making native caller ID depend on them.",
+      "accept": [
+        "Explicit scope separate from original private-directory product",
+        "Data portability and privacy model approved",
+        "No feature creep before MVP"
+      ],
+      "tests": [
+        "Future product review"
+      ],
+      "notes": "Avoid Dex/Monica complexity until core proven."
+    }
+  ],
+  "stage_gate": "No implementation until approved planning gate; do not contact upstream without approval"
+}
