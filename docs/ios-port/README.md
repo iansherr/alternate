@@ -50,8 +50,11 @@ GitHub Issues are enabled. A native GitHub Projects board has **not** been creat
 
 These files are planning evidence and should not be construed as proven Android/iOS functional acceptance. Source code and fork main remain unchanged.
 
+## Real-device acceptance handoff
+- [Signed iPhone caller ID test and privacy matrix](REAL_DEVICE_HANDOFF.md) — required for real native Phone identification; no physical call verified.
+
 ## Further bounded work (2026-11-21)
-- [Draft stacked PR #50](https://github.com/iansherr/alternate/pull/50) builds on native Call Directory PR #47 to add an explicitly consented minimal App Group number-and-alias index, a protected atomic snapshot and validation/disable tests. Not integrated with a full address book. Latest CI and physical-device acceptance remain separately gated.
+- [Draft stacked PR #50](https://github.com/iansherr/alternate/pull/50) builds on native Call Directory PR #47 to add an explicitly consented minimal App Group number-and-alias index, a protected atomic snapshot and validation/disable tests. Not integrated with a full address book. Swift unit tests and unsigned iOS packaging passed at [run #44936063500](https://github.com/iansherr/alternate/actions/runs/44936063500); physical-device acceptance remains gated.
 - [Issue #48 — iOS ContactProvider research](https://github.com/iansherr/alternate/issues/48) is optional. It may expose provider contacts to other iOS apps, so it must not silently replace Call Directory.
 - [Issue #49 — macOS Messages aliases](https://github.com/iansherr/alternate/issues/49) is optional. No documented native Call Directory-equivalent Messages lookup extension was verified; any system Contacts publication must be informed opt-in.
 - The source of truth is 44 child issues and one [roadmap #1](https://github.com/iansherr/alternate/issues/1), all without an automatic merge or upstream submission.
