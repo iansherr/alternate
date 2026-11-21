@@ -5,8 +5,6 @@ name: Android PR Baseline
 on:
   pull_request:
     branches: [main]
-  push:
-    branches: [ci/android-pr-baseline]
 
 permissions:
   contents: read
@@ -37,8 +35,12 @@ jobs:
         run: |
           set -euo pipefail
           echo "ANDROID_HOME=${ANDROID_HOME:-}"
-          command -v sdkmanager
-          sdkmanager --install "platforms;android-37"
+          SDK_MANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -path "*/bin/sdkmanager" | head -n 1)"
+          if [ -z "$SDK_MANAGER" ]; then
+            echo "::error::Android SDK command-line tools missing from $ANDROID_HOME"
+            exit 1
+          fi
+          "$SDK_MANAGER" --install "platforms;android-37"
 
       - name: Record toolchain
         run: |
