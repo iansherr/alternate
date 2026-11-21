@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "CallerIndexContract",
-    platforms: [.macOS(.v13), .iOS(.v18)],
+    platforms: [.macOS(.v13), .iOS("18.0")],
     products: [
         .library(name: "CallerIndexContract", targets: ["CallerIndexContract"])
     ],
