@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Alternate"
 include(":app")
+include(":shared-core")
