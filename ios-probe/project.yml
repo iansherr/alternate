@@ -1,0 +1,39 @@
+name: CallerIdProbe
+
+options:
+  bundleIdPrefix: dev.alternate.calleridprobe
+  deploymentTarget:
+    iOS: "18.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "18.0"
+    TARGETED_DEVICE_FAMILY: "1"
+
+targets:
+  ProbeApp:
+    type: application
+    platform: iOS
+    sources:
+      - path: App
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.alternate.calleridprobe
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: "Alternate Caller ID Probe"
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+    dependencies:
+      - target: CallerIdExtension
+        embed: true
+
+  CallerIdExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: Extension/CallDirectoryHandler.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: dev.alternate.calleridprobe.extension
+        GENERATE_INFOPLIST_FILE: NO
+        INFOPLIST_FILE: Extension/Info.plist
