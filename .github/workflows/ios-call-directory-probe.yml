@@ -2,7 +2,7 @@ name: iOS Call Directory packaging probe
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, spike/ios-call-directory-probe]
     paths:
       - "ios-probe/**"
       - ".github/workflows/ios-call-directory-probe.yml"
@@ -29,6 +29,9 @@ jobs:
         run: |
           if ! command -v xcodegen >/dev/null 2>&1; then brew install xcodegen; fi
           xcodegen --version
+      - name: Execute caller index contract tests
+        working-directory: ios-probe
+        run: swift test --parallel
       - name: Build both iOS targets without signing
         working-directory: ios-probe
         run: |
