@@ -1,8 +1,6 @@
 name: KMP shared core experiment
 
 on:
-  push:
-    branches: [spike/kmp-shared-core]
   pull_request:
     branches: [main]
     paths:
@@ -39,7 +37,7 @@ jobs:
       - name: Verify exact head and Gradle builds
         run: |
           git rev-parse HEAD
-          ./gradlew :app:testDebugUnitTest :app:assembleDebug :shared-core:assemble --stacktrace --no-daemon
+          ./gradlew :app:testDebugUnitTest :app:assembleDebug :shared-core:assemble :shared-core:testAndroidHostTest --stacktrace --no-daemon
 
   ios:
     name: Compile common Kotlin for iOS simulator
@@ -64,4 +62,4 @@ jobs:
       - name: Compile iOS simulator target
         run: |
           git rev-parse HEAD
-          ./gradlew :shared-core:compileKotlinIosSimulatorArm64 --stacktrace --no-daemon
+          ./gradlew :shared-core:compileKotlinIosSimulatorArm64 :shared-core:compileTestKotlinIosSimulatorArm64 --stacktrace --no-daemon
