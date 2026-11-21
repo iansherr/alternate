@@ -41,3 +41,10 @@ No code implementation or upstream posts before approval of Gate A. No unverifie
 - **Optional later:** 3 issues
 
 GitHub Issues are enabled. A native GitHub Projects board has **not** been created through the available connector; the [project board Markdown](PROJECT_BOARD.md) is the current project list.
+## Feasibility evidence (read before claiming code)
+- [Exact-head Android source/baseline audit](BASELINE_AUDIT.md): Kotlin 2.4.21 + AGP 9.5.1 + Gradle 9.9.1 outside published fully-tested matrix, Android app ID/schema and migration fixtures, ordinary Room vs encryption, and `android:allowBackup=true`. **Static only; runtime tests not yet verified.**
+- [ADR-001 architecture options](ADR-001_ARCHITECTURE.md): proposed additive KMP shared library, SwiftUI/Compose decision and reversible fallback.
+- [Native iPhone Call Directory spike contract](IOS_CALL_DIRECTORY_SPIKE.md): signing prerequisites, OS privacy limitations and physical-device pass/fail matrix.
+- [Draft fork-local Android baseline CI PR #44](https://github.com/iansherr/alternate/pull/44): read-only tests/debug build; unmerged, passing status not yet established.
+
+These files are planning evidence and should not be construed as proven Android/iOS functional acceptance. Source code and fork main remain unchanged.
