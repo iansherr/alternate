@@ -1,16 +1,26 @@
 import CallKit
 
-/// Minimal Call Directory extension with a fictional, reserved example number.
-/// Build-and-packaging proof only. Production must load explicitly consented
-/// number + visible-alias entries from a protected App Group snapshot.
+/// Reads only an explicitly published minimal phone-number/alias index.
 final class AlternateCallDirectoryHandler: CXCallDirectoryProvider {
     override func beginRequest(with context: CXCallDirectoryExtensionContext) {
-        // US 202-555-0124 is in the fictional 555-0100–0199 block.
-        // Replace ONLY with an authorized test caller on a signed test device.
-        context.addIdentificationEntry(
-            withNextSequentialPhoneNumber: 12025550124,
-            label: "Alternate Fictional Test"
-        )
+        // Apple requires complete entries for full requests and incremental
+        // removal of previous labels when the OS asks for a delta.
+        if context.isIncremental {
+            context.removeAllIdentificationEntries()
+        }
+        guard let snapshot = try? CallerIndexStore.appGroup().load(),
+              snapshot.enabled else {
+            // Missing consent, corrupt snapshot or unavailable App Group:
+            // no new names supplied. An OS reload failure is surfaced by host.
+            context.completeRequest()
+            return
+        }
+        for entry in snapshot.entries {
+            context.addIdentificationEntry(
+                withNextSequentialPhoneNumber: entry.number,
+                label: entry.alias
+            )
+        }
         context.completeRequest()
     }
 }

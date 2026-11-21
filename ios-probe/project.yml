@@ -17,9 +17,11 @@ targets:
     platform: iOS
     sources:
       - path: App
+      - path: SharedIndex
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.alternate.calleridprobe
+        CODE_SIGN_ENTITLEMENTS: App/App.entitlements
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: "Alternate Caller ID Probe"
         INFOPLIST_KEY_UILaunchScreen_Generation: YES
@@ -32,8 +34,10 @@ targets:
     platform: iOS
     sources:
       - path: Extension/CallDirectoryHandler.swift
+      - path: SharedIndex
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: dev.alternate.calleridprobe.extension
+        CODE_SIGN_ENTITLEMENTS: Extension/Extension.entitlements
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Extension/Info.plist
