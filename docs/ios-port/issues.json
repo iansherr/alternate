@@ -7,184 +7,6 @@
   "state": "reassessed_planning_only_issues_live",
   "issues": [
     {
-      "id": "CID-06",
-      "phase": "iOS caller ID  ",
-      "priority": "high  ",
-      "title": "Test caller-label precedence, ambiguity, reload limits and OS caching",
-      "deps": [
-        "CID-02",
-        "CID-03",
-        "P0-08"
-      ],
-      "scope": "Define behavior for numbers also in Apple Contacts or identified by Apple/carrier/other caller-ID apps; dual-SIM and withheld-number calls, local/international display normalization, invalid numbers, duplicate aliases, number reuse and large caller indexes. Test extension reload/incremental update, cancellation, no stale labels after deletion and on/off toggles under iOS limits.",
-      "accept": [
-        "Precedence/collision matrix documented from real-device evidence, not guesses",
-        "Unsupported and privacy-sensitive caller cases handled as unknown, not misidentified",
-        "Performance bounds and failure/reload recovery measured and documented",
-        "No unsupported promise that historical Recents labels instantly vanish"
-      ],
-      "tests": [
-        "Physical iPhone test across duplicate local Contacts, unknown, blocked, and two caller-ID providers when available",
-        "Stress sorted index and incremental reload, error handling, memory/time limits"
-      ],
-      "notes": "Official Apple docs support incremental add/remove but not guaranteed global label precedence or history clearing.",
-      "issue_number": 41,
-      "issue_url": "https://github.com/iansherr/alternate/issues/41",
-      "status": "Backlog"
-    },
-    {
-      "id": "DATA-01",
-      "phase": "Kotlin shared core  ",
-      "priority": "high  ",
-      "title": "Deterministic import/merge, reversible migration and portable contact ownership",
-      "deps": [
-        "KMP-02",
-        "KMP-04",
-        "KMP-05"
-      ],
-      "scope": "Write shared canonical contact-number/address schema and conflict contract for imported vCards and Android data without silently changing Android's established unique-number semantics. Preserve exact raw numbers, country/extension, full names, multiple phones and labels; define duplicate resolution skip/merge/keep-both at contact and phone levels, dry-run preview and undo/export-before-migration. Do not promise automatic cross-device sync.",
-      "accept": [
-        "No contact or number silently lost/overwritten during import or upgrade",
-        "Unchanged duplicates skipped deterministically; differences are user-resolved without unintended merges",
-        "Idempotent retry and rollback/backups for migrations; explicit duplicate number ownership on each platform",
-        "International formatting and special characters round-trip between Android and iOS"
-      ],
-      "tests": [
-        "Golden before/after fixtures with 2.x/3.x data and conflicted vCards",
-        "Negative tests for partial failure, truncated file, corrupted DB and interrupted migration"
-      ],
-      "notes": "Separate from upstream #40 broad import formats and backup requests; constrain to essential data integrity.",
-      "issue_number": 42,
-      "issue_url": "https://github.com/iansherr/alternate/issues/42",
-      "status": "Backlog"
-    },
-    {
-      "id": "OPS-01",
-      "phase": "Quality/release  ",
-      "priority": "high  ",
-      "title": "Upstream contribution/release ownership, support policy and sustainable maintenance",
-      "deps": [
-        "P0-05",
-        "P0-07",
-        "QA-05"
-      ],
-      "scope": "Decide ownership and release responsibilities for KMP framework, native Swift extension and iOS app if upstream declines iOS. Explicitly cover MIT attribution, artwork/brand/metadata permissions, Apple bundle IDs, signed builds, reproducible toolchains, update provenance, review/maintainer time, security disclosures, fork sync and KMP dependency upgrades. Specify when to stop or minimize effort to avoid permanent fork maintenance.",
-      "accept": [
-        "Upstream-first portable PR sequence and fallback fork-release strategy agreed",
-        "Ownership and support/security-response boundaries documented",
-        "No shared credentials or surprise release obligations; legal/license/artwork audit complete",
-        "Sustainable minimum maintenance plan and stop conditions written"
-      ],
-      "tests": [
-        "Review MIT license and non-code assets/trademarks with actual repository metadata",
-        "Cold-start contributor can reproduce build and identify support owner"
-      ],
-      "notes": "Do not infer upstream willingness or create upstream issue/PR without explicit owner approval.",
-      "issue_number": 43,
-      "issue_url": "https://github.com/iansherr/alternate/issues/43",
-      "status": "Backlog"
-    },
-    {
-      "id": "P0-07",
-      "phase": "Discovery & governance  ",
-      "priority": "critical  ",
-      "title": "Architecture decision gate: KMP logic vs shared UI vs native iOS",
-      "deps": [
-        "P0-04",
-        "P0-05"
-      ],
-      "scope": "Establish a decision record comparing (A) KMP data/domain + native SwiftUI, (B) KMP + Compose Multiplatform shared UI, and (C) separate iOS app with stable data exchange. Assess actual Alternate 3.2.0 AndroidX Navigation, Material 3 Expressive, shape/animation dependencies, Room/KSP, Gradle/Kotlin/Xcode, upstream maintenance burden, developer resources, and rollback. KMP is a hypothesis, not a mandated architectural outcome.",
-      "accept": [
-        "Evidence-based scorecard: reuse, iOS UX, Android risk, maintenance cost and upstream acceptability",
-        "Explicit go/no-go with limited scope and stop criteria; Android baseline stays intact",
-        "Allow extraction of portable core independently of decision to share screens"
-      ],
-      "tests": [
-        "Pin toolchain and compile tiny representative contact card/model + database read on iOS simulator AFTER implementation authorization",
-        "Show native SwiftUI fallback if Compose Material Expressive incompatible"
-      ],
-      "notes": "Architecture decision must be recorded before broad KMP-09 UI migration; don't treat experimental compile as iPhone caller-ID proof.",
-      "issue_number": 37,
-      "issue_url": "https://github.com/iansherr/alternate/issues/37",
-      "status": "Backlog"
-    },
-    {
-      "id": "P0-08",
-      "phase": "Discovery & governance  ",
-      "priority": "critical  ",
-      "title": "iPhone device, Apple signing and Call Directory capability preflight",
-      "deps": [
-        "P0-02",
-        "P0-03"
-      ],
-      "scope": "Inventory available macOS/Xcode, Apple Developer Program/team, signing and entitlements, suitable physical iPhone, test caller number and dual-SIM/carrier conditions; verify Call Directory extension route, settings access and feasible signed test on device as a bounded preflight. Separate planning from authorized prototype implementation.",
-      "accept": [
-        "Owner records device/provisioning prerequisites, costs and responsibilities (without posting secrets)",
-        "Native Call Directory eligibility and on-device test plan documented",
-        "Preflight go/no-go condition before deep shared-UI investment; evidence distinguishes simulator from actual calls"
-      ],
-      "tests": [
-        "List exact Xcode/iOS build versions and provisioning steps",
-        "After authorization, test simple independent extension on real device with one synthetic contact"
-      ],
-      "notes": "No app code before planning gate; no assumption simulator can validate cellular caller ID.",
-      "issue_number": 38,
-      "issue_url": "https://github.com/iansherr/alternate/issues/38",
-      "status": "Backlog"
-    },
-    {
-      "id": "SEC-01",
-      "phase": "Discovery & governance  ",
-      "priority": "critical  ",
-      "title": "Define demonstrable encryption-at-rest, backups and private-index storage model",
-      "deps": [
-        "P0-03",
-        "P0-08"
-      ],
-      "scope": "Audit actual Android 3.x Room database and legacy MMKV behavior separately from iOS. Do not claim the app uses SQLCipher unless code proves it. Decide iOS full database encryption or iOS file-protection level, Keychain secret lifecycle, iCloud/iTunes backup exclusions where appropriate, SQLITE WAL/SHM/temporary files, App Group snapshot after-first-unlock availability, device theft and reinstall/data wipe semantics.",
-      "accept": [
-        "Current Android privacy facts documented without overstatement",
-        "iOS protected/unprotected index availability and lock-state tradeoff explicitly approved",
-        "Backup, restore, reinstall and delete handling fully specified for vault, extension index and OS labels",
-        "Sensitive notes/addresses/photos never present in caller-ID snapshot"
-      ],
-      "tests": [
-        "Threat-model review for locked phone, after reboot, restore and key rotation",
-        "On-device backup/file-protection inspection with test records, no real PII"
-      ],
-      "notes": "Address the fundamental distinction between isolation from Apple Contacts and actual encryption at rest.",
-      "issue_number": 39,
-      "issue_url": "https://github.com/iansherr/alternate/issues/39",
-      "status": "Backlog"
-    },
-    {
-      "id": "UX-01",
-      "phase": "iOS application  ",
-      "priority": "critical  ",
-      "title": "Accidental-call and accidental-sharing protection product contract",
-      "deps": [
-        "P0-02",
-        "P0-03",
-        "IOS-03",
-        "IOS-06"
-      ],
-      "scope": "Specify and implement deliberate call confirmation and export/share safeguards without making everyday lookup cumbersome; provide opt-in aliases, redact addresses/notes from quick-share surfaces, confirmation scopes, safe copy behavior and app-switcher previews. Explicitly state native Phone Recents and some system sharing cannot be intercepted. Protect import into Apple Contacts from unintentional broad writes.",
-      "accept": [
-        "No single accidental tap in Alternate places a call or transmits a complete vCard",
-        "Users preview exactly which fields and people are shared; addresses/notes excluded by default when appropriate",
-        "Previews, clipboard, share sheets and shortcuts reviewed for PII disclosure",
-        "One clearly documented limitation: native Phone app Recents cannot be guarded by Alternate"
-      ],
-      "tests": [
-        "UI mis-tap and accessibility double-tap regression scenarios",
-        "Real-device export/share/call privacy walkthrough with fake sensitive fields"
-      ],
-      "notes": "Core product motivation, not optional polishing. Avoid claiming control over Apple's Phone app.",
-      "issue_number": 40,
-      "issue_url": "https://github.com/iansherr/alternate/issues/40",
-      "status": "Backlog"
-    },
-    {
       "id": "P0-01",
       "phase": "Discovery & governance",
       "priority": "critical",
@@ -322,6 +144,105 @@
       "notes": "GitHub Projects requires separate API/tool access; Markdown board serves as source until linked.",
       "issue_number": 7,
       "issue_url": "https://github.com/iansherr/alternate/issues/7",
+      "status": "Backlog"
+    },
+    {
+      "id": "P0-07",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Architecture decision gate: KMP logic vs shared UI vs native iOS",
+      "deps": [
+        "P0-04",
+        "P0-05"
+      ],
+      "scope": "Establish a decision record comparing (A) KMP data/domain + native SwiftUI, (B) KMP + Compose Multiplatform shared UI, and (C) separate iOS app with stable data exchange. Assess actual Alternate 3.2.0 AndroidX Navigation, Material 3 Expressive, shape/animation dependencies, Room/KSP, Gradle/Kotlin/Xcode, upstream maintenance burden, developer resources, and rollback. KMP is a hypothesis, not a mandated architectural outcome.",
+      "accept": [
+        "Evidence-based scorecard: reuse, iOS UX, Android risk, maintenance cost and upstream acceptability",
+        "Explicit go/no-go with limited scope and stop criteria; Android baseline stays intact",
+        "Allow extraction of portable core independently of decision to share screens"
+      ],
+      "tests": [
+        "Pin toolchain and compile tiny representative contact card/model + database read on iOS simulator AFTER implementation authorization",
+        "Show native SwiftUI fallback if Compose Material Expressive incompatible"
+      ],
+      "notes": "Architecture decision must be recorded before broad KMP-09 UI migration; don't treat experimental compile as iPhone caller-ID proof.",
+      "issue_number": 37,
+      "issue_url": "https://github.com/iansherr/alternate/issues/37",
+      "status": "Backlog"
+    },
+    {
+      "id": "P0-08",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "iPhone device, Apple signing and Call Directory capability preflight",
+      "deps": [
+        "P0-02",
+        "P0-03"
+      ],
+      "scope": "Inventory available macOS/Xcode, Apple Developer Program/team, signing and entitlements, suitable physical iPhone, test caller number and dual-SIM/carrier conditions; verify Call Directory extension route, settings access and feasible signed test on device as a bounded preflight. Separate planning from authorized prototype implementation.",
+      "accept": [
+        "Owner records device/provisioning prerequisites, costs and responsibilities (without posting secrets)",
+        "Native Call Directory eligibility and on-device test plan documented",
+        "Preflight go/no-go condition before deep shared-UI investment; evidence distinguishes simulator from actual calls"
+      ],
+      "tests": [
+        "List exact Xcode/iOS build versions and provisioning steps",
+        "After authorization, test simple independent extension on real device with one synthetic contact"
+      ],
+      "notes": "No app code before planning gate; no assumption simulator can validate cellular caller ID.",
+      "issue_number": 38,
+      "issue_url": "https://github.com/iansherr/alternate/issues/38",
+      "status": "Backlog"
+    },
+    {
+      "id": "SEC-01",
+      "phase": "Discovery & governance",
+      "priority": "critical",
+      "title": "Define demonstrable encryption-at-rest, backups and private-index storage model",
+      "deps": [
+        "P0-03",
+        "P0-08"
+      ],
+      "scope": "Audit actual Android 3.x Room database and legacy MMKV behavior separately from iOS. Do not claim the app uses SQLCipher unless code proves it. Decide iOS full database encryption or iOS file-protection level, Keychain secret lifecycle, iCloud/iTunes backup exclusions where appropriate, SQLITE WAL/SHM/temporary files, App Group snapshot after-first-unlock availability, device theft and reinstall/data wipe semantics.",
+      "accept": [
+        "Current Android privacy facts documented without overstatement",
+        "iOS protected/unprotected index availability and lock-state tradeoff explicitly approved",
+        "Backup, restore, reinstall and delete handling fully specified for vault, extension index and OS labels",
+        "Sensitive notes/addresses/photos never present in caller-ID snapshot"
+      ],
+      "tests": [
+        "Threat-model review for locked phone, after reboot, restore and key rotation",
+        "On-device backup/file-protection inspection with test records, no real PII"
+      ],
+      "notes": "Address the fundamental distinction between isolation from Apple Contacts and actual encryption at rest.",
+      "issue_number": 39,
+      "issue_url": "https://github.com/iansherr/alternate/issues/39",
+      "status": "Backlog"
+    },
+    {
+      "id": "DATA-01",
+      "phase": "Kotlin shared core",
+      "priority": "high",
+      "title": "Deterministic import/merge, reversible migration and portable contact ownership",
+      "deps": [
+        "KMP-02",
+        "KMP-04",
+        "KMP-05"
+      ],
+      "scope": "Write shared canonical contact-number/address schema and conflict contract for imported vCards and Android data without silently changing Android's established unique-number semantics. Preserve exact raw numbers, country/extension, full names, multiple phones and labels; define duplicate resolution skip/merge/keep-both at contact and phone levels, dry-run preview and undo/export-before-migration. Do not promise automatic cross-device sync.",
+      "accept": [
+        "No contact or number silently lost/overwritten during import or upgrade",
+        "Unchanged duplicates skipped deterministically; differences are user-resolved without unintended merges",
+        "Idempotent retry and rollback/backups for migrations; explicit duplicate number ownership on each platform",
+        "International formatting and special characters round-trip between Android and iOS"
+      ],
+      "tests": [
+        "Golden before/after fixtures with 2.x/3.x data and conflicted vCards",
+        "Negative tests for partial failure, truncated file, corrupted DB and interrupted migration"
+      ],
+      "notes": "Separate from upstream #40 broad import formats and backup requests; constrain to essential data integrity.",
+      "issue_number": 42,
+      "issue_url": "https://github.com/iansherr/alternate/issues/42",
       "status": "Backlog"
     },
     {
@@ -694,6 +615,33 @@
       "status": "Backlog"
     },
     {
+      "id": "UX-01",
+      "phase": "iOS application",
+      "priority": "critical",
+      "title": "Accidental-call and accidental-sharing protection product contract",
+      "deps": [
+        "P0-02",
+        "P0-03",
+        "IOS-03",
+        "IOS-06"
+      ],
+      "scope": "Specify and implement deliberate call confirmation and export/share safeguards without making everyday lookup cumbersome; provide opt-in aliases, redact addresses/notes from quick-share surfaces, confirmation scopes, safe copy behavior and app-switcher previews. Explicitly state native Phone Recents and some system sharing cannot be intercepted. Protect import into Apple Contacts from unintentional broad writes.",
+      "accept": [
+        "No single accidental tap in Alternate places a call or transmits a complete vCard",
+        "Users preview exactly which fields and people are shared; addresses/notes excluded by default when appropriate",
+        "Previews, clipboard, share sheets and shortcuts reviewed for PII disclosure",
+        "One clearly documented limitation: native Phone app Recents cannot be guarded by Alternate"
+      ],
+      "tests": [
+        "UI mis-tap and accessibility double-tap regression scenarios",
+        "Real-device export/share/call privacy walkthrough with fake sensitive fields"
+      ],
+      "notes": "Core product motivation, not optional polishing. Avoid claiming control over Apple's Phone app.",
+      "issue_number": 40,
+      "issue_url": "https://github.com/iansherr/alternate/issues/40",
+      "status": "Backlog"
+    },
+    {
       "id": "CID-01",
       "phase": "iOS caller ID",
       "priority": "critical",
@@ -817,6 +765,58 @@
       "notes": "Optional after basic iOS caller ID works.",
       "issue_number": 27,
       "issue_url": "https://github.com/iansherr/alternate/issues/27",
+      "status": "Backlog"
+    },
+    {
+      "id": "CID-06",
+      "phase": "iOS caller ID",
+      "priority": "high",
+      "title": "Test caller-label precedence, ambiguity, reload limits and OS caching",
+      "deps": [
+        "CID-02",
+        "CID-03",
+        "P0-08"
+      ],
+      "scope": "Define behavior for numbers also in Apple Contacts or identified by Apple/carrier/other caller-ID apps; dual-SIM and withheld-number calls, local/international display normalization, invalid numbers, duplicate aliases, number reuse and large caller indexes. Test extension reload/incremental update, cancellation, no stale labels after deletion and on/off toggles under iOS limits.",
+      "accept": [
+        "Precedence/collision matrix documented from real-device evidence, not guesses",
+        "Unsupported and privacy-sensitive caller cases handled as unknown, not misidentified",
+        "Performance bounds and failure/reload recovery measured and documented",
+        "No unsupported promise that historical Recents labels instantly vanish"
+      ],
+      "tests": [
+        "Physical iPhone test across duplicate local Contacts, unknown, blocked, and two caller-ID providers when available",
+        "Stress sorted index and incremental reload, error handling, memory/time limits"
+      ],
+      "notes": "Official Apple docs support incremental add/remove but not guaranteed global label precedence or history clearing.",
+      "issue_number": 41,
+      "issue_url": "https://github.com/iansherr/alternate/issues/41",
+      "status": "Backlog"
+    },
+    {
+      "id": "OPS-01",
+      "phase": "Quality/release",
+      "priority": "high",
+      "title": "Upstream contribution/release ownership, support policy and sustainable maintenance",
+      "deps": [
+        "P0-05",
+        "P0-07",
+        "QA-05"
+      ],
+      "scope": "Decide ownership and release responsibilities for KMP framework, native Swift extension and iOS app if upstream declines iOS. Explicitly cover MIT attribution, artwork/brand/metadata permissions, Apple bundle IDs, signed builds, reproducible toolchains, update provenance, review/maintainer time, security disclosures, fork sync and KMP dependency upgrades. Specify when to stop or minimize effort to avoid permanent fork maintenance.",
+      "accept": [
+        "Upstream-first portable PR sequence and fallback fork-release strategy agreed",
+        "Ownership and support/security-response boundaries documented",
+        "No shared credentials or surprise release obligations; legal/license/artwork audit complete",
+        "Sustainable minimum maintenance plan and stop conditions written"
+      ],
+      "tests": [
+        "Review MIT license and non-code assets/trademarks with actual repository metadata",
+        "Cold-start contributor can reproduce build and identify support owner"
+      ],
+      "notes": "Do not infer upstream willingness or create upstream issue/PR without explicit owner approval.",
+      "issue_number": 43,
+      "issue_url": "https://github.com/iansherr/alternate/issues/43",
       "status": "Backlog"
     },
     {

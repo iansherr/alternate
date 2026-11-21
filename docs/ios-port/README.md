@@ -33,16 +33,11 @@ No code implementation or upstream posts before approval of Gate A. No unverifie
 5. **E — Upstream/release:** approved contributor PR sequence, packaging, security/maintenance ownership and release plan.
 
 ## Ticket counts
-- **iOS caller ID  :** 1 issues
-- **Kotlin shared core  :** 1 issues
-- **Quality/release  :** 1 issues
-- **Discovery & governance  :** 3 issues
-- **iOS application  :** 1 issues
-- **Discovery & governance:** 6 issues
-- **Kotlin shared core:** 9 issues
-- **iOS application:** 6 issues
-- **iOS caller ID:** 5 issues
-- **Quality/release:** 6 issues
+- **Discovery & governance:** 9 issues
+- **Kotlin shared core:** 10 issues
+- **iOS application:** 7 issues
+- **iOS caller ID:** 6 issues
+- **Quality/release:** 7 issues
 - **Optional later:** 3 issues
 
 GitHub Issues are enabled. A native GitHub Projects board has **not** been created through the available connector; the [project board Markdown](PROJECT_BOARD.md) is the current project list.
