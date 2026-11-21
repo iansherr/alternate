@@ -31,7 +31,7 @@ jobs:
       - name: Configure Gradle
         uses: gradle/actions/setup-gradle@v6
 
-      - name: Ensure Android API 37 is installed
+      - name: Ensure Android 17 preview SDK (API 37.0) is installed
         run: |
           set -euo pipefail
           echo "ANDROID_HOME=${ANDROID_HOME:-}"
@@ -40,7 +40,8 @@ jobs:
             echo "::error::Android SDK command-line tools missing from $ANDROID_HOME"
             exit 1
           fi
-          "$SDK_MANAGER" --install "platforms;android-37"
+          "$SDK_MANAGER" --install --channel=3 "platforms;android-37.0"
+          ls -lah "$ANDROID_HOME/platforms"
 
       - name: Record toolchain
         run: |
