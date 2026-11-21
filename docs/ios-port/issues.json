@@ -1038,9 +1038,62 @@
       "issue_number": 36,
       "issue_url": "https://github.com/iansherr/alternate/issues/36",
       "status": "Deferred"
+    },
+    {
+      "id": "OPT-04",
+      "phase": "Optional later",
+      "priority": "optional",
+      "title": "Evaluate ContactProvider on iOS for Messages name resolution",
+      "deps": [
+        "P0-03",
+        "SEC-01",
+        "CID-04"
+      ],
+      "scope": "Investigate read-only iOS ContactProvider for optional Messages sender recognition. Assess system-wide visibility, Photos/notes/address exposure, aliases, revocation, Apple Contacts coexistence and privacy tradeoffs versus Call Directory. Default OFF, not MVP.",
+      "accept": [
+        "Evidence-based iOS compatibility and Messages lookup behavior",
+        "Disclosure and opt-in contract with alias+number only",
+        "No writes to user's Apple Contacts or silent ContactsProvider publication",
+        "Security-reviewed go/no-go, not implemented automatically"
+      ],
+      "tests": [
+        "Signed iOS test of provider visibility to Messages and other system apps only if separately approved",
+        "Revocation, reboot, duplicate and contact precedence matrix"
+      ],
+      "notes": "Optional; explicitly differentiate source-isolated read-only contacts from app-private Contacts. Docs: developer.apple.com/documentation/ContactProvider.",
+      "issue_number": 48,
+      "issue_url": "https://github.com/iansherr/alternate/issues/48",
+      "status": "Deferred"
+    },
+    {
+      "id": "OPT-05",
+      "phase": "Optional later",
+      "priority": "optional",
+      "title": "Research macOS Messages sender aliases without exposing private contacts",
+      "deps": [
+        "P0-02",
+        "SEC-01",
+        "UX-01"
+      ],
+      "scope": "Research supported macOS Messages sender-name lookup mechanism versus opt-in local Contacts alias-only vCard, separate Contacts account, opt-in CardDAV, and private in-app lookup. No unsupported Messages DB hooks, AppleScript UI interception, or covert sync.",
+      "accept": [
+        "Documented native API support or explicit absence",
+        "Least-privilege alias export with full field disclosure and revocation/cleanup",
+        "Conflict/duplicate and iCloud/other-app visibility risk matrix",
+        "Owner-approved recommendation; not MVP"
+      ],
+      "tests": [
+        "macOS Messages/local Contacts manual test with synthetic data only if separately approved",
+        "Account removal/revocation and sync exposure tests"
+      ],
+      "notes": "Default OFF, no automatic Contacts publication or network sync. Apple Messages names normally resolve from system Contacts; no supported Call Directory-style macOS Messages lookup confirmed.",
+      "issue_number": 49,
+      "issue_url": "https://github.com/iansherr/alternate/issues/49",
+      "status": "Deferred"
     }
   ],
   "stage_gate": "No implementation until approved planning gate; do not contact upstream without approval",
   "reassessed": "2026-11-21",
-  "revision": 2
+  "revision": 2,
+  "reassessment_revision": 3
 }
