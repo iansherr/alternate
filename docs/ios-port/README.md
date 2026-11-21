@@ -1,6 +1,6 @@
 # Alternate KMP + iOS — planning-first roadmap
 
-**Status: planning-only; no application code changes.** Revised 2026-11-21. The issue tracker is live; this planning branch and its project index contain the canonical dependency plan. Fork and upstream main are both at `a434f408fd693332948e67183620797a6019ab8e`.
+**Status: planning backlog and separately gated draft feasibility PRs; no code has landed on main.** Revised 2026-11-21. The issue tracker is live; this planning branch and its project index contain the canonical dependency plan. Fork and upstream main are both at `a434f408fd693332948e67183620797a6019ab8e`.
 
 - [Master roadmap #1](https://github.com/iansherr/alternate/issues/1)
 - [Whole-plan reassessment](REASSESSMENT_2026-11-21.md)
@@ -38,14 +38,20 @@ No code implementation or upstream posts before approval of Gate A. No unverifie
 - **iOS application:** 7 issues
 - **iOS caller ID:** 6 issues
 - **Quality/release:** 7 issues
-- **Optional later:** 3 issues
+- **Optional later:** 5 issues
 
 GitHub Issues are enabled. A native GitHub Projects board has **not** been created through the available connector; the [project board Markdown](PROJECT_BOARD.md) is the current project list.
 ## Feasibility evidence (read before claiming code)
-- [Verified exact-head build proofs — Android, KMP, Call Directory](FEASIBILITY_RESULTS_2026-11-21.md): all three independent draft PRs have green CI as of November 21; no signed real-device caller-ID proof or migration test yet.
+- [Verified exact-head build proofs — Android, KMP, Call Directory](FEASIBILITY_RESULTS_2026-11-21.md): the initial Android/KMP/Swift packaging probes (#44, #46, #47) passed; stacked #50 adds the opt-in caller-ID index and is independently tested, with no signed real-device proof.
 - [Exact-head Android source/baseline audit](BASELINE_AUDIT.md): Kotlin 2.4.21 + AGP 9.5.1 + Gradle 9.9.1 outside published fully-tested matrix, Android app ID/schema and migration fixtures, ordinary Room vs encryption, and `android:allowBackup=true`. **Static only; runtime tests not yet verified.**
 - [ADR-001 architecture options](ADR-001_ARCHITECTURE.md): proposed additive KMP shared library, SwiftUI/Compose decision and reversible fallback.
 - [Native iPhone Call Directory spike contract](IOS_CALL_DIRECTORY_SPIKE.md): signing prerequisites, OS privacy limitations and physical-device pass/fail matrix.
-- [Draft fork-local Android baseline CI PR #44](https://github.com/iansherr/alternate/pull/44): read-only tests/debug build; unmerged, passing status not yet established.
+- [Draft fork-local Android baseline CI PR #44](https://github.com/iansherr/alternate/pull/44): read-only tests/debug build; passed at exact head and remains unmerged.
 
 These files are planning evidence and should not be construed as proven Android/iOS functional acceptance. Source code and fork main remain unchanged.
+
+## Further bounded work (2026-11-21)
+- [Draft stacked PR #50](https://github.com/iansherr/alternate/pull/50) builds on native Call Directory PR #47 to add an explicitly consented minimal App Group number-and-alias index, a protected atomic snapshot and validation/disable tests. Not integrated with a full address book. Latest CI and physical-device acceptance remain separately gated.
+- [Issue #48 — iOS ContactProvider research](https://github.com/iansherr/alternate/issues/48) is optional. It may expose provider contacts to other iOS apps, so it must not silently replace Call Directory.
+- [Issue #49 — macOS Messages aliases](https://github.com/iansherr/alternate/issues/49) is optional. No documented native Call Directory-equivalent Messages lookup extension was verified; any system Contacts publication must be informed opt-in.
+- The source of truth is 44 child issues and one [roadmap #1](https://github.com/iansherr/alternate/issues/1), all without an automatic merge or upstream submission.
