@@ -1,85 +1,76 @@
-# Alternate iOS + KMP — project board (source of truth until GitHub Projects is available)
+# Alternate iOS + KMP — 42-issue project list
 
-## Project status
-**Planning / No implementation authorized.** Fork Issues currently disabled; enable in repository Settings → General → Features → Issues before creating real GitHub issue cards. This branch is documentation-only and upstream `main` remains unchanged.
+**Status:** planning only; no implementation authorized. GitHub Issues are active; this is a Markdown board, **not an actual GitHub Projects board**. The GitHub connector cannot create/manage Projects at present.
 
-## Columns
-- **Backlog** — described but not ready to claim
-- **Ready** — dependencies landed; exact-head baseline checked and work unowned
-- **Claimed / In progress** — one owner/branch; log timestamp, PR and SHA
-- **Review / Verification** — tests and all expected checks evaluated; not yet landed
-- **Blocked** — record dependency, reason and unblock criterion
-- **Landed** — relevant behavior on authoritative target main, acceptance proven
-- **Deferred** — explicitly outside MVP with explanation
+[Roadmap #1](https://github.com/iansherr/alternate/issues/1) · [Reassessment](REASSESSMENT_2026-11-21.md) · [Backlog detail](ISSUE_BACKLOG.md)
 
-## Required fields per card
-Stable ticket ID, GitHub issue URL, title, milestone, priority, risk, owner, dependency IDs, status, branch, PR URL, head SHA, base SHA, required and observed checks, last update, handoff/next action, upstream acceptance eligibility.
+## Workflow / fields
+Columns: Backlog → Ready → Claimed/In progress → Review/Verification → Landed; Blocked and Deferred are separate. A green open PR is **not** landed. Required metadata: stable ID, issue URL, milestone, priority, owner/claim, dependency, platform, branch, head SHA, tests, blockers, next action, upstream status.
 
-## Milestone allocation
-| Milestone | Workstream | Exit |
+## Milestones
+| Gate | Purpose | Exit |
 |---|---|---|
-| M0 | P0 Discovery/governance | Design, privacy, compatibility and approvals complete |
-| M1 | KMP Shared core | Android parity + multiplatform compile and model/database tests |
-| M2 | iOS application | Local directory, CRUD, lock and import/export operational |
-| M3 | iOS caller ID | Offline native Caller Directory verified on physical iPhone |
-| M4 | Quality/release | CI, negative/security tests, accessibility and beta readiness |
-| M5 | Upstream handoff | Bounded PRs or consciously retained fork delta |
-| Later | Optional | Separately approved enhancements |
+| M0 / Gate A | Planning, feasibility and risk decisions | Architecture, Android baseline, iPhone preflight, security, issue DAG, user approval |
+| Spike / Gate B | Evidence-driven go/no-go | Tiny common Kotlin compile/database + Swift one-number real-device caller ID, only after approval |
+| M1 | Shared core | Android upgrade unaffected; shared models/repo/Room tests |
+| M2 | iOS app | Independent local directory, navigation, import/export, Face ID and mis-tap protection |
+| M3 | Native call ID | Consent index; signed extension; real inbound calls; revocation and collisions tested |
+| M4 | Security/quality/beta | Android and iOS CI, privacy, access, localization, release docs |
+| M5 | Upstream handoff | Agreed small PRs or documented sustainable fork strategy |
+| Later | Optional enhancements | Explicit promotion after MVP |
 
-## Full planned queue
+## Ready criteria
+Planning authorization satisfied, prerequisite issues *landed*, exact head checked, no conflicting work claim, bounded scope/test gates and no unaudited security-impacting changes.
 
-| ID | Milestone | Priority | Status | Dependencies | GitHub issue |
+## Detailed project list
+| Ticket | Issue | Milestone | Priority | Status | Depends on |
 |---|---|---|---|---|---|
-| P0-01 | Discovery & governance | critical | Backlog | — | _Pending Issues enablement_ |
-| P0-02 | Discovery & governance | critical | Backlog | — | _Pending Issues enablement_ |
-| P0-03 | Discovery & governance | critical | Backlog | P0-02 | _Pending Issues enablement_ |
-| P0-04 | Discovery & governance | critical | Backlog | P0-01, P0-02 | _Pending Issues enablement_ |
-| P0-05 | Discovery & governance | critical | Backlog | P0-02, P0-03, P0-04 | _Pending Issues enablement_ |
-| P0-06 | Discovery & governance | high | Backlog | P0-05 | _Pending Issues enablement_ |
-| KMP-01 | Kotlin shared core | critical | Backlog | P0-01, P0-04, P0-05 | _Pending Issues enablement_ |
-| KMP-02 | Kotlin shared core | critical | Backlog | KMP-01 | _Pending Issues enablement_ |
-| KMP-03 | Kotlin shared core | critical | Backlog | KMP-02 | _Pending Issues enablement_ |
-| KMP-04 | Kotlin shared core | high | Backlog | KMP-02 | _Pending Issues enablement_ |
-| KMP-05 | Kotlin shared core | critical | Backlog | KMP-01, KMP-02, P0-01 | _Pending Issues enablement_ |
-| KMP-06 | Kotlin shared core | critical | Backlog | KMP-03, KMP-05 | _Pending Issues enablement_ |
-| KMP-07 | Kotlin shared core | high | Backlog | KMP-01, P0-03 | _Pending Issues enablement_ |
-| KMP-08 | Kotlin shared core | high | Backlog | KMP-02, KMP-04 | _Pending Issues enablement_ |
-| KMP-09 | Kotlin shared core | high | Backlog | P0-04, KMP-01, KMP-06 | _Pending Issues enablement_ |
-| IOS-01 | iOS application | critical | Backlog | KMP-01, P0-03, P0-04 | _Pending Issues enablement_ |
-| IOS-02 | iOS application | critical | Backlog | IOS-01, KMP-06, KMP-09 | _Pending Issues enablement_ |
-| IOS-03 | iOS application | critical | Backlog | IOS-02, KMP-06 | _Pending Issues enablement_ |
-| IOS-04 | iOS application | high | Backlog | IOS-03, KMP-04, KMP-08 | _Pending Issues enablement_ |
-| IOS-05 | iOS application | critical | Backlog | IOS-01, KMP-07, P0-03 | _Pending Issues enablement_ |
-| IOS-06 | iOS application | high | Backlog | IOS-02, P0-02, P0-03 | _Pending Issues enablement_ |
-| CID-01 | iOS caller ID | critical | Backlog | KMP-03, KMP-06, P0-03, IOS-01 | _Pending Issues enablement_ |
-| CID-02 | iOS caller ID | critical | Backlog | CID-01, IOS-01 | _Pending Issues enablement_ |
-| CID-03 | iOS caller ID | critical | Backlog | CID-01, CID-02, IOS-03 | _Pending Issues enablement_ |
-| CID-04 | iOS caller ID | critical | Backlog | CID-02, CID-03, IOS-05 | _Pending Issues enablement_ |
-| CID-05 | iOS caller ID | medium | Backlog | CID-04, IOS-06 | _Pending Issues enablement_ |
-| QA-01 | Quality/release | critical | Backlog | KMP-01, IOS-01 | _Pending Issues enablement_ |
-| QA-02 | Quality/release | critical | Backlog | KMP-05, KMP-06, CID-03 | _Pending Issues enablement_ |
-| QA-03 | Quality/release | high | Backlog | IOS-04, IOS-05, CID-04, P0-03 | _Pending Issues enablement_ |
-| QA-04 | Quality/release | high | Backlog | IOS-03, IOS-06 | _Pending Issues enablement_ |
-| QA-05 | Quality/release | high | Backlog | QA-01, QA-02, QA-03, QA-04 | _Pending Issues enablement_ |
-| QA-06 | Quality/release | critical | Backlog | QA-05, P0-05 | _Pending Issues enablement_ |
-| OPT-01 | Optional later | optional | Deferred | QA-03 | _Pending Issues enablement_ |
-| OPT-02 | Optional later | optional | Deferred | CID-04 | _Pending Issues enablement_ |
-| OPT-03 | Optional later | optional | Deferred | IOS-03 | _Pending Issues enablement_ |
+| `CID-06` | [#41](https://github.com/iansherr/alternate/issues/41) — Test caller-label precedence, ambiguity, reload limits and OS caching | undefined | high   | Backlog | [CID-02](https://github.com/iansherr/alternate/issues/24), [CID-03](https://github.com/iansherr/alternate/issues/25), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `DATA-01` | [#42](https://github.com/iansherr/alternate/issues/42) — Deterministic import/merge, reversible migration and portable contact ownership | undefined | high   | Backlog | [KMP-02](https://github.com/iansherr/alternate/issues/9), [KMP-04](https://github.com/iansherr/alternate/issues/11), [KMP-05](https://github.com/iansherr/alternate/issues/12) |
+| `OPS-01` | [#43](https://github.com/iansherr/alternate/issues/43) — Upstream contribution/release ownership, support policy and sustainable maintenance | undefined | high   | Backlog | [P0-05](https://github.com/iansherr/alternate/issues/6), [P0-07](https://github.com/iansherr/alternate/issues/37), [QA-05](https://github.com/iansherr/alternate/issues/32) |
+| `P0-07` | [#37](https://github.com/iansherr/alternate/issues/37) — Architecture decision gate: KMP logic vs shared UI vs native iOS | undefined | critical   | Backlog | [P0-04](https://github.com/iansherr/alternate/issues/5), [P0-05](https://github.com/iansherr/alternate/issues/6) |
+| `P0-08` | [#38](https://github.com/iansherr/alternate/issues/38) — iPhone device, Apple signing and Call Directory capability preflight | undefined | critical   | Backlog | [P0-02](https://github.com/iansherr/alternate/issues/3), [P0-03](https://github.com/iansherr/alternate/issues/4) |
+| `SEC-01` | [#39](https://github.com/iansherr/alternate/issues/39) — Define demonstrable encryption-at-rest, backups and private-index storage model | undefined | critical   | Backlog | [P0-03](https://github.com/iansherr/alternate/issues/4), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `UX-01` | [#40](https://github.com/iansherr/alternate/issues/40) — Accidental-call and accidental-sharing protection product contract | undefined | critical   | Backlog | [P0-02](https://github.com/iansherr/alternate/issues/3), [P0-03](https://github.com/iansherr/alternate/issues/4), [IOS-03](https://github.com/iansherr/alternate/issues/19), [IOS-06](https://github.com/iansherr/alternate/issues/22) |
+| `P0-01` | [#2](https://github.com/iansherr/alternate/issues/2) — Capture exact Android 3.2 baseline and upgrade/data fixtures | M0 | critical | Backlog | — |
+| `P0-02` | [#3](https://github.com/iansherr/alternate/issues/3) — Approve iOS product charter, parity matrix and non-goals | M0 | critical | Backlog | — |
+| `P0-03` | [#4](https://github.com/iansherr/alternate/issues/4) — Document privacy threat model and security invariants | M0 | critical | Backlog | [P0-02](https://github.com/iansherr/alternate/issues/3) |
+| `P0-04` | [#5](https://github.com/iansherr/alternate/issues/5) — KMP/Compose/Room feasibility and component inventory | M0 | critical | Backlog | [P0-01](https://github.com/iansherr/alternate/issues/2), [P0-02](https://github.com/iansherr/alternate/issues/3) |
+| `P0-05` | [#6](https://github.com/iansherr/alternate/issues/6) — Define upstream proposal, issue boundaries and coordination/merge contract | M0 | critical | Backlog | [P0-02](https://github.com/iansherr/alternate/issues/3), [P0-03](https://github.com/iansherr/alternate/issues/4), [P0-04](https://github.com/iansherr/alternate/issues/5) |
+| `P0-06` | [#7](https://github.com/iansherr/alternate/issues/7) — Define milestone/project board, prioritization and ready/done gates | M0 | high | Backlog | [P0-05](https://github.com/iansherr/alternate/issues/6), [P0-07](https://github.com/iansherr/alternate/issues/37), [P0-08](https://github.com/iansherr/alternate/issues/38), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `KMP-01` | [#8](https://github.com/iansherr/alternate/issues/8) — Add additive KMP skeleton and iOS compilation target | M1 | critical | Backlog | [P0-01](https://github.com/iansherr/alternate/issues/2), [P0-04](https://github.com/iansherr/alternate/issues/5), [P0-05](https://github.com/iansherr/alternate/issues/6), [P0-06](https://github.com/iansherr/alternate/issues/7), [P0-07](https://github.com/iansherr/alternate/issues/37), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `KMP-02` | [#9](https://github.com/iansherr/alternate/issues/9) — Extract portable contact, phone, group and caller DTOs | M1 | critical | Backlog | [KMP-01](https://github.com/iansherr/alternate/issues/8) |
+| `KMP-03` | [#10](https://github.com/iansherr/alternate/issues/10) — Share search, filtering, phone normalization and ordering | M1 | critical | Backlog | [KMP-02](https://github.com/iansherr/alternate/issues/9) |
+| `KMP-04` | [#11](https://github.com/iansherr/alternate/issues/11) — Share vCard parser/exporter and adversarial fixtures | M1 | high | Backlog | [KMP-02](https://github.com/iansherr/alternate/issues/9) |
+| `KMP-05` | [#12](https://github.com/iansherr/alternate/issues/12) — Migrate Room entities, DAOs and database builder safely | M1 | critical | Backlog | [KMP-01](https://github.com/iansherr/alternate/issues/8), [KMP-02](https://github.com/iansherr/alternate/issues/9), [P0-01](https://github.com/iansherr/alternate/issues/2), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `KMP-06` | [#13](https://github.com/iansherr/alternate/issues/13) — Share repository and Flow-based contact use cases | M1 | critical | Backlog | [KMP-03](https://github.com/iansherr/alternate/issues/10), [KMP-05](https://github.com/iansherr/alternate/issues/12) |
+| `KMP-07` | [#14](https://github.com/iansherr/alternate/issues/14) — Define secure platform preferences, key, biometric and clock adapters | M1 | high | Backlog | [KMP-01](https://github.com/iansherr/alternate/issues/8), [P0-03](https://github.com/iansherr/alternate/issues/4), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `KMP-08` | [#15](https://github.com/iansherr/alternate/issues/15) — Separate photo/file system dependencies from shared data and VCF | M1 | high | Backlog | [KMP-02](https://github.com/iansherr/alternate/issues/9), [KMP-04](https://github.com/iansherr/alternate/issues/11) |
+| `KMP-09` | [#16](https://github.com/iansherr/alternate/issues/16) — Audit and extract interoperable Compose UI primitives | M1 | high | Backlog | [P0-04](https://github.com/iansherr/alternate/issues/5), [KMP-01](https://github.com/iansherr/alternate/issues/8), [KMP-06](https://github.com/iansherr/alternate/issues/13) |
+| `IOS-01` | [#17](https://github.com/iansherr/alternate/issues/17) — Create iOS Xcode shell and Kotlin bridge | M2 | critical | Backlog | [KMP-01](https://github.com/iansherr/alternate/issues/8), [P0-03](https://github.com/iansherr/alternate/issues/4), [P0-04](https://github.com/iansherr/alternate/issues/5), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `IOS-02` | [#18](https://github.com/iansherr/alternate/issues/18) — Build contact list, detail, groups, favorites and search | M2 | critical | Backlog | [IOS-01](https://github.com/iansherr/alternate/issues/17), [KMP-06](https://github.com/iansherr/alternate/issues/13), [KMP-09](https://github.com/iansherr/alternate/issues/16) |
+| `IOS-03` | [#19](https://github.com/iansherr/alternate/issues/19) — Implement contact CRUD and deliberate outgoing-call action | M2 | critical | Backlog | [IOS-02](https://github.com/iansherr/alternate/issues/18), [KMP-06](https://github.com/iansherr/alternate/issues/13) |
+| `IOS-04` | [#20](https://github.com/iansherr/alternate/issues/20) — Native document/photo import/export and disclosure controls | M2 | high | Backlog | [IOS-03](https://github.com/iansherr/alternate/issues/19), [KMP-04](https://github.com/iansherr/alternate/issues/11), [KMP-08](https://github.com/iansherr/alternate/issues/15), [DATA-01](https://github.com/iansherr/alternate/issues/42) |
+| `IOS-05` | [#21](https://github.com/iansherr/alternate/issues/21) — Face ID/Keychain lock and privacy snapshot behavior | M2 | critical | Backlog | [IOS-01](https://github.com/iansherr/alternate/issues/17), [KMP-07](https://github.com/iansherr/alternate/issues/14), [P0-03](https://github.com/iansherr/alternate/issues/4), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `IOS-06` | [#22](https://github.com/iansherr/alternate/issues/22) — Setup, permission guide and user privacy settings | M2 | high | Backlog | [IOS-02](https://github.com/iansherr/alternate/issues/18), [P0-02](https://github.com/iansherr/alternate/issues/3), [P0-03](https://github.com/iansherr/alternate/issues/4) |
+| `CID-01` | [#23](https://github.com/iansherr/alternate/issues/23) — Design minimal number-to-label index and atomic App Group contract | M3 | critical | Backlog | [KMP-03](https://github.com/iansherr/alternate/issues/10), [KMP-06](https://github.com/iansherr/alternate/issues/13), [P0-03](https://github.com/iansherr/alternate/issues/4), [IOS-01](https://github.com/iansherr/alternate/issues/17), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `CID-02` | [#24](https://github.com/iansherr/alternate/issues/24) — Implement native Swift CXCallDirectoryProvider extension | M3 | critical | Backlog | [CID-01](https://github.com/iansherr/alternate/issues/23), [IOS-01](https://github.com/iansherr/alternate/issues/17), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `CID-03` | [#25](https://github.com/iansherr/alternate/issues/25) — Implement index update/reload/removal, consent and stale-label recovery | M3 | critical | Backlog | [CID-01](https://github.com/iansherr/alternate/issues/23), [CID-02](https://github.com/iansherr/alternate/issues/24), [IOS-03](https://github.com/iansherr/alternate/issues/19) |
+| `CID-04` | [#26](https://github.com/iansherr/alternate/issues/26) — Real-device acceptance matrix: locks, number formats, reboots and permissions | M3 | critical | Backlog | [CID-02](https://github.com/iansherr/alternate/issues/24), [CID-03](https://github.com/iansherr/alternate/issues/25), [IOS-05](https://github.com/iansherr/alternate/issues/21), [CID-06](https://github.com/iansherr/alternate/issues/41) |
+| `CID-05` | [#27](https://github.com/iansherr/alternate/issues/27) — Optional label formatting, disclosure preferences and multiple numbers | M3 | medium | Backlog | [CID-04](https://github.com/iansherr/alternate/issues/26), [IOS-06](https://github.com/iansherr/alternate/issues/22) |
+| `QA-01` | [#28](https://github.com/iansherr/alternate/issues/28) — CI matrix for Android, KMP iOS simulator, unit, schema and lint | M4/M5 | critical | Backlog | [KMP-01](https://github.com/iansherr/alternate/issues/8), [IOS-01](https://github.com/iansherr/alternate/issues/17), [P0-08](https://github.com/iansherr/alternate/issues/38) |
+| `QA-02` | [#29](https://github.com/iansherr/alternate/issues/29) — Regression/negative acceptance fixtures for migration and caller ID | M4/M5 | critical | Backlog | [KMP-05](https://github.com/iansherr/alternate/issues/12), [KMP-06](https://github.com/iansherr/alternate/issues/13), [CID-03](https://github.com/iansherr/alternate/issues/25), [DATA-01](https://github.com/iansherr/alternate/issues/42) |
+| `QA-03` | [#30](https://github.com/iansherr/alternate/issues/30) — Security hardening: import, storage, locks, logging, index and exports | M4/M5 | high | Backlog | [IOS-04](https://github.com/iansherr/alternate/issues/20), [IOS-05](https://github.com/iansherr/alternate/issues/21), [CID-04](https://github.com/iansherr/alternate/issues/26), [P0-03](https://github.com/iansherr/alternate/issues/4), [UX-01](https://github.com/iansherr/alternate/issues/40), [CID-06](https://github.com/iansherr/alternate/issues/41), [SEC-01](https://github.com/iansherr/alternate/issues/39) |
+| `QA-04` | [#31](https://github.com/iansherr/alternate/issues/31) — Accessibility, localization and UI parity audit | M4/M5 | high | Backlog | [IOS-03](https://github.com/iansherr/alternate/issues/19), [IOS-06](https://github.com/iansherr/alternate/issues/22) |
+| `QA-05` | [#32](https://github.com/iansherr/alternate/issues/32) — Reproducible iOS signing, TestFlight/package plan and release checklist | M4/M5 | high | Backlog | [QA-01](https://github.com/iansherr/alternate/issues/28), [QA-02](https://github.com/iansherr/alternate/issues/29), [QA-03](https://github.com/iansherr/alternate/issues/30), [QA-04](https://github.com/iansherr/alternate/issues/31) |
+| `QA-06` | [#33](https://github.com/iansherr/alternate/issues/33) — Upstream contribution handoff, dependency retirement and roadmap closure | M4/M5 | critical | Backlog | [QA-05](https://github.com/iansherr/alternate/issues/32), [P0-05](https://github.com/iansherr/alternate/issues/6), [OPS-01](https://github.com/iansherr/alternate/issues/43) |
+| `OPT-01` | [#34](https://github.com/iansherr/alternate/issues/34) — Explore protected local encrypted backup/restore and multi-device sync | Later | optional | Deferred | [QA-03](https://github.com/iansherr/alternate/issues/30) |
+| `OPT-02` | [#35](https://github.com/iansherr/alternate/issues/35) — Explore multiple profiles and profile-specific caller labels | Later | optional | Deferred | [CID-04](https://github.com/iansherr/alternate/issues/26) |
+| `OPT-03` | [#36](https://github.com/iansherr/alternate/issues/36) — Explore enhanced relationship metadata or privacy-preserving contact groups | Later | optional | Deferred | [IOS-03](https://github.com/iansherr/alternate/issues/19) |
 
-## Sequencing / lane discipline
-1. Planning gate: P0-01 through P0-06, including maintainer-facing proposal as **draft only** and iOS feasibility decision.
-2. Shared-core first: KMP-01; models + utils in constrained carriers; Room/schema then repository; optional UI/photo/settings extraction in separate branches.
-3. Independent UI/app lane may start when KMP-01 and relevant contracts land; iOS contacts CRUD must precede binding index reload to edits.
-4. Native Call Directory index contract and Swift extension are independent carriers; require real-device testing for final acceptance.
-5. Release lane includes positive + negative tests, Android upgrades, security, signing and exact-head checks.
-6. Optional tracks not eligible for MVP unless formally promoted and ticket acceptance renegotiated.
-7. On any upstream divergence, refresh baseline, inventory new PR/issues and rebase/cherry-pick proven isolated changes; **never squash or close a dependency before tracking what behavior landed**.
-
-## Definition of ready
-No unowned conflicting work; dependency behavior landed; source/current main SHA validated; boundaries and excluded files clear; test/acceptance plan feasible; specific implementing agent claimed branch+ticket.
-
-## Definition of done
-Code **landed** on appropriate target branch and required test evidence attached; app behavior verified, safety invariants preserved, migration parity checked where affected; no stale labels or lost work; remaining issues left with exact handoff. An open green PR never qualifies.
-
-## Operating guidance for agent handoffs
-Each issue/PR must include: objective; constraints; exact upstream/fork base SHA; branch/head SHA; owned paths; non-owned paths; deps and merge order; tests run and outputs; user-facing behavior proof; blockers; next eligible action.
+## Protection of upstream and parallel work
+- Before claiming: read upstream main/AGENTS or contributing guidelines, current PRs and repo issue list, inspect exact changed paths and active owners.
+- Every PR is small, independently testable and uniquely owned. Dependencies, behavior lineage, code ownership and evidence must be durable.
+- Avoid squash or force update of unlanded dependent branches. Never close an issue only because CI is green or a PR is open.
+- Don't post to upstream without explicit approval. Upstream [#39](https://github.com/BioHazard786/Alternate/issues/39) profiles and [#40](https://github.com/BioHazard786/Alternate/issues/40) backups remain distinct.
+- Unknown GitHub Project status must be described honestly; this board can be imported into a native project later.

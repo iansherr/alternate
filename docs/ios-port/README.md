@@ -1,47 +1,48 @@
 # Alternate KMP + iOS — planning-first roadmap
 
-> **Planning only.** These documents define an issue-ready backlog and project tracker for `iansherr/alternate`. No app code was changed. Do not start implementation before the planning gate is approved.
->
-> Created 2026-11-21 against fork/upstream `main` at `a434f408fd693332948e67183620797a6019ab8e` (Alternate Android 3.2.0). Fork Issues was disabled when this roadmap was prepared. Convert the tickets in [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) to GitHub Issues after enabling it; link them in [PROJECT_BOARD.md](PROJECT_BOARD.md).
+**Status: planning-only; no application code changes.** Revised 2026-11-21. The issue tracker is live; this planning branch and its project index contain the canonical dependency plan. Fork and upstream main are both at `a434f408fd693332948e67183620797a6019ab8e`.
 
-## Purpose
-Offer a fully offline, open-source secondary iPhone address book whose contacts **do not enter Apple Contacts**, and which identifies opted-in incoming callers using native iOS Call Directory. Pursue Android stability and meaningful, modest upstream contributions before broad porting. Kotlin Multiplatform + Compose Multiplatform and Room KMP are candidates subject to feasibility validation, **not** a pre-approved rewrite.
+- [Master roadmap #1](https://github.com/iansherr/alternate/issues/1)
+- [Whole-plan reassessment](REASSESSMENT_2026-11-21.md)
+- [Full issue backlog](ISSUE_BACKLOG.md)
+- [Project board and milestones](PROJECT_BOARD.md)
+- [Machine-readable issue index](issues.json)
+- [Draft upstream proposal — NOT SENT](UPSTREAM_PROPOSAL.md)
 
-## Unnegotiable constraints
-1. No unrequested writes to Apple Contacts, no remote caller-ID lookup or network dependency, and no Android-style system-wide overlay on iOS. Explicit consent for minimal OS caller ID mapping.
-2. Android parity is a release gate: preserve package ID, signing/update path, existing Room schema and v2.x migrations, app lock, overlays, call-screening/directory services, and API behavior.
-3. Protect user data, especially name/number index accessible to iOS extension. App Group caller index holds only normalized phone number plus intentionally chosen visible alias; no notes, addresses, emails, photos, auth keys or full vault. Account for locked phone/reboot and OS caller history.
-4. PRs must be independently reviewable, avoid duplicate carriers and destructive squash, and include exact SHA and test results. An open green PR is *not* landed. Branches and unretired work are never thrown away without provenance.
-5. Do not contact upstream or publish new upstream issues/PRs without explicit user approval. Avoid overlap with upstream [#39](https://github.com/BioHazard786/Alternate/issues/39) and [#40](https://github.com/BioHazard786/Alternate/issues/40).
+## Product mission
+Open-source, privacy-first **secondary address book for iPhone** that recognizes incoming phone numbers from its own local contacts while not writing those contacts into Apple Contacts. Protect against accidental calling/sharing of other people's addresses and notes, within documented iOS Phone-app limits.
 
-## Scope and acceptance
-### MVP (must all hold)
-- Add/import/edit/delete and browse a local iPhone directory; searchable names and multiple numbers, groups/favorites as supported by shared model.
-- Apple Contacts remains unchanged and unneeded for core use.
-- A real iPhone identifies an incoming test number through iOS's native Call Directory while the main application is locked or not running; an unknown caller remains unknown.
-- Opt-in per index and clear disablement; changes/deletions synchronize without persistent stale identifiers after reload verification.
-- Lock/Face ID and deliberate outgoing dialing; explicit disclosure that OS caller labels/Phone Recents can remain visible, and iOS cannot prevent all accidental callbacks.
-- VCF round trip with safe file handling; no uploads, analytics or hidden sync.
-- Existing Android build/upgrade/migration/privacy behavior verified, and iOS signed device build and reproducible CI evidence.
+## Architecture (conditional)
+**Prefer Kotlin Multiplatform shared business logic.** Do not assume full Compose UI reuse until measured against Alternative A (shared Kotlin + SwiftUI), B (shared Kotlin + Compose Multiplatform), and C (minimal separate Swift app with stable import/export). Android 3.2.0 is the working upstream product; preserve its package identity, Room migrations, MMKV upgrade, native overlays and behavior. KMP work must be staged and reversibly landed.
 
-### Not MVP
-- Native iOS full call log access, Android-style live floating incoming overlay, remote Live Caller ID provider, call recording, automatic cloud sync, complete CRM, upstream #39 profiles and #40 backups/multi-format requests.
+## Security / privacy contracts
+- Offline, no external lookup or account requirement, no silent Apple Contacts sync.
+- iOS uses Swift Call Directory. Full contact records stay within app storage; only a consented minimal caller `number + chosen label` projection is supplied to the OS extension. OS display history is not within app control.
+- **Isolation is not encryption.** Audit Room SQLite, file protection, backups, WAL/temp and App Group before making privacy claims; see [SEC-01](https://github.com/iansherr/alternate/issues/39).
+- Accidental outbound calls, vCard/addresses disclosure and other share surfaces require explicit UX tests; see [UX-01](https://github.com/iansherr/alternate/issues/40).
+- Correct number ownership, international normalization and collision behavior must be proven, not guessed.
 
-## Milestone exit gates
-| Milestone | Goal | Exit |
-|---|---|---|
-| M0 Planning gate | Design and contributor alignment | All issues complete, dependency order checked, upstream proposal and risks approved; no code started |
-| M1 Shared core | Gradual KMP extraction | Android baseline and migration pass; shared models/Room/domain compile and tests pass |
-| M2 iOS contacts | iPhone app independent of Apple Contacts | Simulator+real device app with CRUD, import/export, security and navigation |
-| M3 Native identification | iOS Call Directory integration | One real-device incoming call identified; add/edit/remove/disable verified; threat model and tests |
-| M4 Quality/beta | Stable release candidate | Both platforms pass CI and privacy/accessibility/release checklists |
-| M5 Upstream handoff | Independent contribution streams | Maintainer-approved bounded PRs or explicit retained fork strategy; no orphaned changes |
+## Governance
+No code implementation or upstream posts before approval of Gate A. No unverified claims about real-device caller ID. No duplication of upstream [#39](https://github.com/BioHazard786/Alternate/issues/39) or [#40](https://github.com/BioHazard786/Alternate/issues/40). Every task records source SHA, ownership, dependency, tests, head SHA and whether behavior **landed** (not just passed CI).
 
-## Ticket conventions
-- [ISSUE_BACKLOG.md](ISSUE_BACKLOG.md) is canonical detailed issue descriptions with exact IDs, dependencies, boundaries, acceptance and verification. Do not assume issue numbers until created.
-- [PROJECT_BOARD.md](PROJECT_BOARD.md) contains project fields, priority and sequencing. Update URL/issue-number mapping after tickets are created.
-- [UPSTREAM_PROPOSAL.md](UPSTREAM_PROPOSAL.md) is **draft only**, for approval before outreach.
-- [issues.json](issues.json) contains a machine-readable copy for bulk issue creation once Issues is enabled.
+## Decision gates
+1. **A — Planning review:** all 42 tickets and dependencies accounted for, architecture/security/device risk reviewed, explicit authorization to experiment.
+2. **B — Two small spikes:** proof of cross-platform model/database feasibility and independent one-number iPhone caller-ID; if a spike fails, revise architecture before a broad migration.
+3. **C — Incremental implementation:** shared domain/data, iOS app, caller ID, with Android unaffected on each intermediate PR.
+4. **D — Real-device product acceptance:** full privacy, accidental-dial/share UX, data integrity and OS caller index verified.
+5. **E — Upstream/release:** approved contributor PR sequence, packaging, security/maintenance ownership and release plan.
 
-## Planning gate
-No implementation, prototype changes to app code, or upstream posts until: Issues enabled; roadmap children posted; board links populated; P0-01/P0-04/P0-03 design choices accepted; maintainer contact plan approved. Changes before then are limited to planning documents.
+## Ticket counts
+- **iOS caller ID  :** 1 issues
+- **Kotlin shared core  :** 1 issues
+- **Quality/release  :** 1 issues
+- **Discovery & governance  :** 3 issues
+- **iOS application  :** 1 issues
+- **Discovery & governance:** 6 issues
+- **Kotlin shared core:** 9 issues
+- **iOS application:** 6 issues
+- **iOS caller ID:** 5 issues
+- **Quality/release:** 6 issues
+- **Optional later:** 3 issues
+
+GitHub Issues are enabled. A native GitHub Projects board has **not** been created through the available connector; the [project board Markdown](PROJECT_BOARD.md) is the current project list.

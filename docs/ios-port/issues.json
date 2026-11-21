@@ -4,8 +4,186 @@
   "repo": "iansherr/alternate",
   "upstream": "BioHazard786/Alternate",
   "baseline_commit": "a434f408fd693332948e67183620797a6019ab8e",
-  "state": "planning_only_issue_tracker_disabled",
+  "state": "reassessed_planning_only_issues_live",
   "issues": [
+    {
+      "id": "CID-06",
+      "phase": "iOS caller ID  ",
+      "priority": "high  ",
+      "title": "Test caller-label precedence, ambiguity, reload limits and OS caching",
+      "deps": [
+        "CID-02",
+        "CID-03",
+        "P0-08"
+      ],
+      "scope": "Define behavior for numbers also in Apple Contacts or identified by Apple/carrier/other caller-ID apps; dual-SIM and withheld-number calls, local/international display normalization, invalid numbers, duplicate aliases, number reuse and large caller indexes. Test extension reload/incremental update, cancellation, no stale labels after deletion and on/off toggles under iOS limits.",
+      "accept": [
+        "Precedence/collision matrix documented from real-device evidence, not guesses",
+        "Unsupported and privacy-sensitive caller cases handled as unknown, not misidentified",
+        "Performance bounds and failure/reload recovery measured and documented",
+        "No unsupported promise that historical Recents labels instantly vanish"
+      ],
+      "tests": [
+        "Physical iPhone test across duplicate local Contacts, unknown, blocked, and two caller-ID providers when available",
+        "Stress sorted index and incremental reload, error handling, memory/time limits"
+      ],
+      "notes": "Official Apple docs support incremental add/remove but not guaranteed global label precedence or history clearing.",
+      "issue_number": 41,
+      "issue_url": "https://github.com/iansherr/alternate/issues/41",
+      "status": "Backlog"
+    },
+    {
+      "id": "DATA-01",
+      "phase": "Kotlin shared core  ",
+      "priority": "high  ",
+      "title": "Deterministic import/merge, reversible migration and portable contact ownership",
+      "deps": [
+        "KMP-02",
+        "KMP-04",
+        "KMP-05"
+      ],
+      "scope": "Write shared canonical contact-number/address schema and conflict contract for imported vCards and Android data without silently changing Android's established unique-number semantics. Preserve exact raw numbers, country/extension, full names, multiple phones and labels; define duplicate resolution skip/merge/keep-both at contact and phone levels, dry-run preview and undo/export-before-migration. Do not promise automatic cross-device sync.",
+      "accept": [
+        "No contact or number silently lost/overwritten during import or upgrade",
+        "Unchanged duplicates skipped deterministically; differences are user-resolved without unintended merges",
+        "Idempotent retry and rollback/backups for migrations; explicit duplicate number ownership on each platform",
+        "International formatting and special characters round-trip between Android and iOS"
+      ],
+      "tests": [
+        "Golden before/after fixtures with 2.x/3.x data and conflicted vCards",
+        "Negative tests for partial failure, truncated file, corrupted DB and interrupted migration"
+      ],
+      "notes": "Separate from upstream #40 broad import formats and backup requests; constrain to essential data integrity.",
+      "issue_number": 42,
+      "issue_url": "https://github.com/iansherr/alternate/issues/42",
+      "status": "Backlog"
+    },
+    {
+      "id": "OPS-01",
+      "phase": "Quality/release  ",
+      "priority": "high  ",
+      "title": "Upstream contribution/release ownership, support policy and sustainable maintenance",
+      "deps": [
+        "P0-05",
+        "P0-07",
+        "QA-05"
+      ],
+      "scope": "Decide ownership and release responsibilities for KMP framework, native Swift extension and iOS app if upstream declines iOS. Explicitly cover MIT attribution, artwork/brand/metadata permissions, Apple bundle IDs, signed builds, reproducible toolchains, update provenance, review/maintainer time, security disclosures, fork sync and KMP dependency upgrades. Specify when to stop or minimize effort to avoid permanent fork maintenance.",
+      "accept": [
+        "Upstream-first portable PR sequence and fallback fork-release strategy agreed",
+        "Ownership and support/security-response boundaries documented",
+        "No shared credentials or surprise release obligations; legal/license/artwork audit complete",
+        "Sustainable minimum maintenance plan and stop conditions written"
+      ],
+      "tests": [
+        "Review MIT license and non-code assets/trademarks with actual repository metadata",
+        "Cold-start contributor can reproduce build and identify support owner"
+      ],
+      "notes": "Do not infer upstream willingness or create upstream issue/PR without explicit owner approval.",
+      "issue_number": 43,
+      "issue_url": "https://github.com/iansherr/alternate/issues/43",
+      "status": "Backlog"
+    },
+    {
+      "id": "P0-07",
+      "phase": "Discovery & governance  ",
+      "priority": "critical  ",
+      "title": "Architecture decision gate: KMP logic vs shared UI vs native iOS",
+      "deps": [
+        "P0-04",
+        "P0-05"
+      ],
+      "scope": "Establish a decision record comparing (A) KMP data/domain + native SwiftUI, (B) KMP + Compose Multiplatform shared UI, and (C) separate iOS app with stable data exchange. Assess actual Alternate 3.2.0 AndroidX Navigation, Material 3 Expressive, shape/animation dependencies, Room/KSP, Gradle/Kotlin/Xcode, upstream maintenance burden, developer resources, and rollback. KMP is a hypothesis, not a mandated architectural outcome.",
+      "accept": [
+        "Evidence-based scorecard: reuse, iOS UX, Android risk, maintenance cost and upstream acceptability",
+        "Explicit go/no-go with limited scope and stop criteria; Android baseline stays intact",
+        "Allow extraction of portable core independently of decision to share screens"
+      ],
+      "tests": [
+        "Pin toolchain and compile tiny representative contact card/model + database read on iOS simulator AFTER implementation authorization",
+        "Show native SwiftUI fallback if Compose Material Expressive incompatible"
+      ],
+      "notes": "Architecture decision must be recorded before broad KMP-09 UI migration; don't treat experimental compile as iPhone caller-ID proof.",
+      "issue_number": 37,
+      "issue_url": "https://github.com/iansherr/alternate/issues/37",
+      "status": "Backlog"
+    },
+    {
+      "id": "P0-08",
+      "phase": "Discovery & governance  ",
+      "priority": "critical  ",
+      "title": "iPhone device, Apple signing and Call Directory capability preflight",
+      "deps": [
+        "P0-02",
+        "P0-03"
+      ],
+      "scope": "Inventory available macOS/Xcode, Apple Developer Program/team, signing and entitlements, suitable physical iPhone, test caller number and dual-SIM/carrier conditions; verify Call Directory extension route, settings access and feasible signed test on device as a bounded preflight. Separate planning from authorized prototype implementation.",
+      "accept": [
+        "Owner records device/provisioning prerequisites, costs and responsibilities (without posting secrets)",
+        "Native Call Directory eligibility and on-device test plan documented",
+        "Preflight go/no-go condition before deep shared-UI investment; evidence distinguishes simulator from actual calls"
+      ],
+      "tests": [
+        "List exact Xcode/iOS build versions and provisioning steps",
+        "After authorization, test simple independent extension on real device with one synthetic contact"
+      ],
+      "notes": "No app code before planning gate; no assumption simulator can validate cellular caller ID.",
+      "issue_number": 38,
+      "issue_url": "https://github.com/iansherr/alternate/issues/38",
+      "status": "Backlog"
+    },
+    {
+      "id": "SEC-01",
+      "phase": "Discovery & governance  ",
+      "priority": "critical  ",
+      "title": "Define demonstrable encryption-at-rest, backups and private-index storage model",
+      "deps": [
+        "P0-03",
+        "P0-08"
+      ],
+      "scope": "Audit actual Android 3.x Room database and legacy MMKV behavior separately from iOS. Do not claim the app uses SQLCipher unless code proves it. Decide iOS full database encryption or iOS file-protection level, Keychain secret lifecycle, iCloud/iTunes backup exclusions where appropriate, SQLITE WAL/SHM/temporary files, App Group snapshot after-first-unlock availability, device theft and reinstall/data wipe semantics.",
+      "accept": [
+        "Current Android privacy facts documented without overstatement",
+        "iOS protected/unprotected index availability and lock-state tradeoff explicitly approved",
+        "Backup, restore, reinstall and delete handling fully specified for vault, extension index and OS labels",
+        "Sensitive notes/addresses/photos never present in caller-ID snapshot"
+      ],
+      "tests": [
+        "Threat-model review for locked phone, after reboot, restore and key rotation",
+        "On-device backup/file-protection inspection with test records, no real PII"
+      ],
+      "notes": "Address the fundamental distinction between isolation from Apple Contacts and actual encryption at rest.",
+      "issue_number": 39,
+      "issue_url": "https://github.com/iansherr/alternate/issues/39",
+      "status": "Backlog"
+    },
+    {
+      "id": "UX-01",
+      "phase": "iOS application  ",
+      "priority": "critical  ",
+      "title": "Accidental-call and accidental-sharing protection product contract",
+      "deps": [
+        "P0-02",
+        "P0-03",
+        "IOS-03",
+        "IOS-06"
+      ],
+      "scope": "Specify and implement deliberate call confirmation and export/share safeguards without making everyday lookup cumbersome; provide opt-in aliases, redact addresses/notes from quick-share surfaces, confirmation scopes, safe copy behavior and app-switcher previews. Explicitly state native Phone Recents and some system sharing cannot be intercepted. Protect import into Apple Contacts from unintentional broad writes.",
+      "accept": [
+        "No single accidental tap in Alternate places a call or transmits a complete vCard",
+        "Users preview exactly which fields and people are shared; addresses/notes excluded by default when appropriate",
+        "Previews, clipboard, share sheets and shortcuts reviewed for PII disclosure",
+        "One clearly documented limitation: native Phone app Recents cannot be guarded by Alternate"
+      ],
+      "tests": [
+        "UI mis-tap and accessibility double-tap regression scenarios",
+        "Real-device export/share/call privacy walkthrough with fake sensitive fields"
+      ],
+      "notes": "Core product motivation, not optional polishing. Avoid claiming control over Apple's Phone app.",
+      "issue_number": 40,
+      "issue_url": "https://github.com/iansherr/alternate/issues/40",
+      "status": "Backlog"
+    },
     {
       "id": "P0-01",
       "phase": "Discovery & governance",
@@ -22,7 +200,10 @@
         "assembleDebug; testDebugUnitTest; connectedDebugAndroidTest where device available",
         "Compare IDs, package/signing, migrated records"
       ],
-      "notes": "Do not modify shipping Android behavior for this ticket."
+      "notes": "Do not modify shipping Android behavior for this ticket.",
+      "issue_number": 2,
+      "issue_url": "https://github.com/iansherr/alternate/issues/2",
+      "status": "Backlog"
     },
     {
       "id": "P0-02",
@@ -40,7 +221,10 @@
         "Review against upstream README and iOS public API capabilities",
         "Confirm no unsupported claims about native Phone Recents"
       ],
-      "notes": "No CRM/cloud/live caller lookup, no Android-style overlay on iOS."
+      "notes": "No CRM/cloud/live caller lookup, no Android-style overlay on iOS.",
+      "issue_number": 3,
+      "issue_url": "https://github.com/iansherr/alternate/issues/3",
+      "status": "Backlog"
     },
     {
       "id": "P0-03",
@@ -60,7 +244,10 @@
         "Security design review + real-device test matrix",
         "Explicit acceptance of iOS platform limitations"
       ],
-      "notes": "Never assume app lock prevents OS displaying previously registered labels."
+      "notes": "Never assume app lock prevents OS displaying previously registered labels.",
+      "issue_number": 4,
+      "issue_url": "https://github.com/iansherr/alternate/issues/4",
+      "status": "Backlog"
     },
     {
       "id": "P0-04",
@@ -81,7 +268,10 @@
         "Verify Kotlin/Compose/Room/KSP + Xcode compatibility via minimal spike after planning gate",
         "No production refactor yet"
       ],
-      "notes": "Migrate from current native Kotlin main, not legacy-expo."
+      "notes": "Migrate from current native Kotlin main, not legacy-expo.",
+      "issue_number": 5,
+      "issue_url": "https://github.com/iansherr/alternate/issues/5",
+      "status": "Backlog"
     },
     {
       "id": "P0-05",
@@ -103,7 +293,10 @@
         "Check upstream open PRs and #39/#40 before each claim",
         "Document no-upstream-contact without explicit approval"
       ],
-      "notes": "No code changes or GitHub upstream mutations in the planning phase."
+      "notes": "No code changes or GitHub upstream mutations in the planning phase.",
+      "issue_number": 6,
+      "issue_url": "https://github.com/iansherr/alternate/issues/6",
+      "status": "Backlog"
     },
     {
       "id": "P0-06",
@@ -111,7 +304,10 @@
       "priority": "high",
       "title": "Define milestone/project board, prioritization and ready/done gates",
       "deps": [
-        "P0-05"
+        "P0-05",
+        "P0-07",
+        "P0-08",
+        "SEC-01"
       ],
       "scope": "Create tracker columns, phases, risk/priority/owner fields, blocked rules, issue ID links, complete workstream inventory and milestone exit criteria.",
       "accept": [
@@ -123,7 +319,10 @@
         "Roadmap audit with all tickets and tracked source of truth",
         "Periodic upstream drift review"
       ],
-      "notes": "GitHub Projects requires separate API/tool access; Markdown board serves as source until linked."
+      "notes": "GitHub Projects requires separate API/tool access; Markdown board serves as source until linked.",
+      "issue_number": 7,
+      "issue_url": "https://github.com/iansherr/alternate/issues/7",
+      "status": "Backlog"
     },
     {
       "id": "KMP-01",
@@ -133,7 +332,10 @@
       "deps": [
         "P0-01",
         "P0-04",
-        "P0-05"
+        "P0-05",
+        "P0-06",
+        "P0-07",
+        "P0-08"
       ],
       "scope": "Introduce shared module and source sets without removing existing Android application or changing package ID, signing or releases.",
       "accept": [
@@ -145,7 +347,10 @@
         "assembleDebug + unit tests + compileKotlinIosSimulatorArm64 (or documented equivalent)",
         "Diff Gradle lock/dependency graph"
       ],
-      "notes": "One isolated, revertible structural PR."
+      "notes": "One isolated, revertible structural PR.",
+      "issue_number": 8,
+      "issue_url": "https://github.com/iansherr/alternate/issues/8",
+      "status": "Backlog"
     },
     {
       "id": "KMP-02",
@@ -165,7 +370,10 @@
         "Cross-platform model round-trip tests",
         "Android DB schema diff"
       ],
-      "notes": "No schema redesign hidden in refactor."
+      "notes": "No schema redesign hidden in refactor.",
+      "issue_number": 9,
+      "issue_url": "https://github.com/iansherr/alternate/issues/9",
+      "status": "Backlog"
     },
     {
       "id": "KMP-03",
@@ -185,7 +393,10 @@
         "Golden fixture tests on Android and iOS",
         "Fuzz malformed phone inputs"
       ],
-      "notes": "Avoid silent truncation or wrong caller labels."
+      "notes": "Avoid silent truncation or wrong caller labels.",
+      "issue_number": 10,
+      "issue_url": "https://github.com/iansherr/alternate/issues/10",
+      "status": "Backlog"
     },
     {
       "id": "KMP-04",
@@ -205,7 +416,10 @@
         "Golden VCF 3/4 import-export round trips",
         "Malformed and hostile input tests"
       ],
-      "notes": "Do not overlap upstream #40 request for broader formats/backups."
+      "notes": "Do not overlap upstream #40 request for broader formats/backups.",
+      "issue_number": 11,
+      "issue_url": "https://github.com/iansherr/alternate/issues/11",
+      "status": "Backlog"
     },
     {
       "id": "KMP-05",
@@ -215,7 +429,8 @@
       "deps": [
         "KMP-01",
         "KMP-02",
-        "P0-01"
+        "P0-01",
+        "SEC-01"
       ],
       "scope": "Make Room models/DAO shared with platform builders and iOS driver; retain existing Android DB location, schema and legacy migrations.",
       "accept": [
@@ -227,7 +442,10 @@
         "Android migration test and exported schema diff",
         "iOS simulator persistence/reopen/cascade tests"
       ],
-      "notes": "Call out Android-specific SupportSQLite migration and platform rewrite where needed."
+      "notes": "Call out Android-specific SupportSQLite migration and platform rewrite where needed.",
+      "issue_number": 12,
+      "issue_url": "https://github.com/iansherr/alternate/issues/12",
+      "status": "Backlog"
     },
     {
       "id": "KMP-06",
@@ -248,7 +466,10 @@
         "Shared repository contract and concurrency tests",
         "Android UI behavior parity acceptance"
       ],
-      "notes": "Protect main against simultaneous duplicate domain changes."
+      "notes": "Protect main against simultaneous duplicate domain changes.",
+      "issue_number": 13,
+      "issue_url": "https://github.com/iansherr/alternate/issues/13",
+      "status": "Backlog"
     },
     {
       "id": "KMP-07",
@@ -257,7 +478,8 @@
       "title": "Define secure platform preferences, key, biometric and clock adapters",
       "deps": [
         "KMP-01",
-        "P0-03"
+        "P0-03",
+        "SEC-01"
       ],
       "scope": "Keep Android DataStore/lock migration and provide iOS Keychain/LocalAuthentication semantics; clean platform-independent state transitions.",
       "accept": [
@@ -268,7 +490,10 @@
       "tests": [
         "Lock-out timing, force-lock, restart, retry, biometric fallback tests"
       ],
-      "notes": "Security review before reusing existing PIN hashing design."
+      "notes": "Security review before reusing existing PIN hashing design.",
+      "issue_number": 14,
+      "issue_url": "https://github.com/iansherr/alternate/issues/14",
+      "status": "Backlog"
     },
     {
       "id": "KMP-08",
@@ -288,7 +513,10 @@
       "tests": [
         "Photo roundtrip and adversarial image tests on both platforms"
       ],
-      "notes": "No remote avatar storage."
+      "notes": "No remote avatar storage.",
+      "issue_number": 15,
+      "issue_url": "https://github.com/iansherr/alternate/issues/15",
+      "status": "Backlog"
     },
     {
       "id": "KMP-09",
@@ -309,7 +537,10 @@
       "tests": [
         "iOS simulator screenshots/accessibility sizes and Android screenshot comparisons"
       ],
-      "notes": "UI parity can be functional rather than pixel-identical."
+      "notes": "UI parity can be functional rather than pixel-identical.",
+      "issue_number": 16,
+      "issue_url": "https://github.com/iansherr/alternate/issues/16",
+      "status": "Backlog"
     },
     {
       "id": "IOS-01",
@@ -319,7 +550,8 @@
       "deps": [
         "KMP-01",
         "P0-03",
-        "P0-04"
+        "P0-04",
+        "P0-08"
       ],
       "scope": "Add minimal Xcode target, Compose host or native wrapper, bundle IDs, supported iOS floor, code signing and simulator entry point.",
       "accept": [
@@ -331,7 +563,10 @@
         "xcodebuild with pinned versions",
         "Simulator smoke test"
       ],
-      "notes": "No silent network SDKs."
+      "notes": "No silent network SDKs.",
+      "issue_number": 17,
+      "issue_url": "https://github.com/iansherr/alternate/issues/17",
+      "status": "Backlog"
     },
     {
       "id": "IOS-02",
@@ -353,7 +588,10 @@
         "Simulator UI test with Unicode/long lists and persistence",
         "VoiceOver and Dynamic Type baseline"
       ],
-      "notes": "iOS system Phone Recents data is not programmatically exposed by public API."
+      "notes": "iOS system Phone Recents data is not programmatically exposed by public API.",
+      "issue_number": 18,
+      "issue_url": "https://github.com/iansherr/alternate/issues/18",
+      "status": "Backlog"
     },
     {
       "id": "IOS-03",
@@ -374,7 +612,10 @@
         "Real-device CRUD and restart tests",
         "Duplicate multi-number regression and confirmation UX tests"
       ],
-      "notes": "Cannot prevent tapping an existing native Phone Recents item."
+      "notes": "Cannot prevent tapping an existing native Phone Recents item.",
+      "issue_number": 19,
+      "issue_url": "https://github.com/iansherr/alternate/issues/19",
+      "status": "Backlog"
     },
     {
       "id": "IOS-04",
@@ -384,7 +625,8 @@
       "deps": [
         "IOS-03",
         "KMP-04",
-        "KMP-08"
+        "KMP-08",
+        "DATA-01"
       ],
       "scope": "Implement file/UIDocumentPicker, image picker, explicit contact selection, share sheet, sanitized temp files and import conflict flow.",
       "accept": [
@@ -397,7 +639,10 @@
         "Photos and Unicode roundtrip tests",
         "Sandbox/file security tests"
       ],
-      "notes": "No automatic sync in MVP."
+      "notes": "No automatic sync in MVP.",
+      "issue_number": 20,
+      "issue_url": "https://github.com/iansherr/alternate/issues/20",
+      "status": "Backlog"
     },
     {
       "id": "IOS-05",
@@ -407,7 +652,8 @@
       "deps": [
         "IOS-01",
         "KMP-07",
-        "P0-03"
+        "P0-03",
+        "SEC-01"
       ],
       "scope": "Use iOS native auth/Keychain and lifecycle lock, hide data in task switcher, protect clipboard or export warnings.",
       "accept": [
@@ -418,7 +664,10 @@
       "tests": [
         "Physical device test for lock, wake, task switcher, Face ID retries and force-lock"
       ],
-      "notes": "App lock does not revoke previously registered Call Directory labels."
+      "notes": "App lock does not revoke previously registered Call Directory labels.",
+      "issue_number": 21,
+      "issue_url": "https://github.com/iansherr/alternate/issues/21",
+      "status": "Backlog"
     },
     {
       "id": "IOS-06",
@@ -439,7 +688,10 @@
       "tests": [
         "Settings flow integration tests and device walkthrough"
       ],
-      "notes": "No claim that Call Directory names stay invisible to Apple iOS UI."
+      "notes": "No claim that Call Directory names stay invisible to Apple iOS UI.",
+      "issue_number": 22,
+      "issue_url": "https://github.com/iansherr/alternate/issues/22",
+      "status": "Backlog"
     },
     {
       "id": "CID-01",
@@ -450,7 +702,8 @@
         "KMP-03",
         "KMP-06",
         "P0-03",
-        "IOS-01"
+        "IOS-01",
+        "SEC-01"
       ],
       "scope": "Design consented projection of selected normalized phone number and caller alias into app-group snapshot with deterministic sorting/deduplication, data protection, versioning and no sensitive fields.",
       "accept": [
@@ -462,7 +715,10 @@
         "Property tests for sort, Int64 normalization, duplicate collision, snapshots and crash/recovery",
         "Audit app-group file permissions"
       ],
-      "notes": "Do not put full database, auth keys or PIN into extension's shared container."
+      "notes": "Do not put full database, auth keys or PIN into extension's shared container.",
+      "issue_number": 23,
+      "issue_url": "https://github.com/iansherr/alternate/issues/23",
+      "status": "Backlog"
     },
     {
       "id": "CID-02",
@@ -471,7 +727,8 @@
       "title": "Implement native Swift CXCallDirectoryProvider extension",
       "deps": [
         "CID-01",
-        "IOS-01"
+        "IOS-01",
+        "P0-08"
       ],
       "scope": "Embed native Call Directory extension to read safe immutable projection, register sorted identification entries, respect cancellation and avoid runtime app/database access.",
       "accept": [
@@ -483,7 +740,10 @@
         "iPhone signed extension build and real inbound call test",
         "Error and reload diagnostics sans PII"
       ],
-      "notes": "This is offline Call Directory, not Live Caller ID server lookup."
+      "notes": "This is offline Call Directory, not Live Caller ID server lookup.",
+      "issue_number": 24,
+      "issue_url": "https://github.com/iansherr/alternate/issues/24",
+      "status": "Backlog"
     },
     {
       "id": "CID-03",
@@ -505,7 +765,10 @@
         "Physical-device add/change/delete/disable tests and restart/upgrade cycle",
         "Failure injection on reload"
       ],
-      "notes": "Do not promise iOS itself immediately flushes Recents or all cached historical caller labels."
+      "notes": "Do not promise iOS itself immediately flushes Recents or all cached historical caller labels.",
+      "issue_number": 25,
+      "issue_url": "https://github.com/iansherr/alternate/issues/25",
+      "status": "Backlog"
     },
     {
       "id": "CID-04",
@@ -515,7 +778,8 @@
       "deps": [
         "CID-02",
         "CID-03",
-        "IOS-05"
+        "IOS-05",
+        "CID-06"
       ],
       "scope": "Execute signed iPhone tests for app terminated/locked, extension disabled/re-enabled, reboot, unknown caller, malformed/duplicate numbers, privacy exposures.",
       "accept": [
@@ -527,7 +791,10 @@
         "Attach device/iOS version, extension status, screenshots excluding PII, logs redacted",
         "Verify Apple Contacts untouched"
       ],
-      "notes": "Simulator isn't sufficient to prove incoming-call integration."
+      "notes": "Simulator isn't sufficient to prove incoming-call integration.",
+      "issue_number": 26,
+      "issue_url": "https://github.com/iansherr/alternate/issues/26",
+      "status": "Backlog"
     },
     {
       "id": "CID-05",
@@ -547,7 +814,10 @@
       "tests": [
         "Privacy UX tests and alias edge cases"
       ],
-      "notes": "Optional after basic iOS caller ID works."
+      "notes": "Optional after basic iOS caller ID works.",
+      "issue_number": 27,
+      "issue_url": "https://github.com/iansherr/alternate/issues/27",
+      "status": "Backlog"
     },
     {
       "id": "QA-01",
@@ -556,7 +826,8 @@
       "title": "CI matrix for Android, KMP iOS simulator, unit, schema and lint",
       "deps": [
         "KMP-01",
-        "IOS-01"
+        "IOS-01",
+        "P0-08"
       ],
       "scope": "Create distinct CI jobs with pinned Android SDK/JDK, macOS/Xcode for iOS, shared tests and migration checks; protect pull requests from false green due to skipped jobs.",
       "accept": [
@@ -568,7 +839,10 @@
         "Deliberate negative test on each mandatory job",
         "Mac runner expense/capacity and security review"
       ],
-      "notes": "Do not require self-hosted runner or add needless workflows without approval."
+      "notes": "Do not require self-hosted runner or add needless workflows without approval.",
+      "issue_number": 28,
+      "issue_url": "https://github.com/iansherr/alternate/issues/28",
+      "status": "Backlog"
     },
     {
       "id": "QA-02",
@@ -578,7 +852,8 @@
       "deps": [
         "KMP-05",
         "KMP-06",
-        "CID-03"
+        "CID-03",
+        "DATA-01"
       ],
       "scope": "Build fixtures for no data loss, schema upgrade, 2.x migration, deletion/collision race and privacy boundary, and document how tests fail when broken.",
       "accept": [
@@ -590,7 +865,10 @@
         "Migration fixture backups and cross-platform integration tests",
         "Deliberately corrupt inputs to verify fail-closed"
       ],
-      "notes": "Keep fixture provenance/expected results stable."
+      "notes": "Keep fixture provenance/expected results stable.",
+      "issue_number": 29,
+      "issue_url": "https://github.com/iansherr/alternate/issues/29",
+      "status": "Backlog"
     },
     {
       "id": "QA-03",
@@ -601,7 +879,10 @@
         "IOS-04",
         "IOS-05",
         "CID-04",
-        "P0-03"
+        "P0-03",
+        "UX-01",
+        "CID-06",
+        "SEC-01"
       ],
       "scope": "Threat-model review plus harden local DB, App Group protection, sensitive logs, key handling, app-switcher snapshots, sanitizing and deletion.",
       "accept": [
@@ -613,7 +894,10 @@
         "Manual privacy audit, static tests and iOS entitlement review",
         "Real-device penetration-oriented checklist"
       ],
-      "notes": "Open-source app means no proprietary audit assumption."
+      "notes": "Open-source app means no proprietary audit assumption.",
+      "issue_number": 30,
+      "issue_url": "https://github.com/iansherr/alternate/issues/30",
+      "status": "Backlog"
     },
     {
       "id": "QA-04",
@@ -633,7 +917,10 @@
       "tests": [
         "Screen-reader walkthrough, snapshot tests and manual iOS/Android audit"
       ],
-      "notes": "Material 3 Expressive iOS behavior must be checked, not assumed."
+      "notes": "Material 3 Expressive iOS behavior must be checked, not assumed.",
+      "issue_number": 31,
+      "issue_url": "https://github.com/iansherr/alternate/issues/31",
+      "status": "Backlog"
     },
     {
       "id": "QA-05",
@@ -656,7 +943,10 @@
         "Clean checkout build with pinned toolchain, device smoke test",
         "Verify extension embedded and enabled"
       ],
-      "notes": "No release credentials committed; separate upstream brand/trademark discussion."
+      "notes": "No release credentials committed; separate upstream brand/trademark discussion.",
+      "issue_number": 32,
+      "issue_url": "https://github.com/iansherr/alternate/issues/32",
+      "status": "Backlog"
     },
     {
       "id": "QA-06",
@@ -665,7 +955,8 @@
       "title": "Upstream contribution handoff, dependency retirement and roadmap closure",
       "deps": [
         "QA-05",
-        "P0-05"
+        "P0-05",
+        "OPS-01"
       ],
       "scope": "Review all issue/PR evidence and determine portable upstream PRs versus iOS-specific fork changes; preserve authorship, exact commit lineage and independent release path.",
       "accept": [
@@ -677,7 +968,10 @@
         "Trace each release capability to landed PR + tests",
         "Revalidate upstream status and current branch lineage"
       ],
-      "notes": "Nothing sent upstream without explicit user approval."
+      "notes": "Nothing sent upstream without explicit user approval.",
+      "issue_number": 33,
+      "issue_url": "https://github.com/iansherr/alternate/issues/33",
+      "status": "Backlog"
     },
     {
       "id": "OPT-01",
@@ -696,7 +990,10 @@
       "tests": [
         "Future design review"
       ],
-      "notes": "Don't duplicate upstream #40."
+      "notes": "Don't duplicate upstream #40.",
+      "issue_number": 34,
+      "issue_url": "https://github.com/iansherr/alternate/issues/34",
+      "status": "Deferred"
     },
     {
       "id": "OPT-02",
@@ -715,7 +1012,10 @@
       "tests": [
         "Future design and privacy review"
       ],
-      "notes": "Don't duplicate upstream #39."
+      "notes": "Don't duplicate upstream #39.",
+      "issue_number": 35,
+      "issue_url": "https://github.com/iansherr/alternate/issues/35",
+      "status": "Deferred"
     },
     {
       "id": "OPT-03",
@@ -734,8 +1034,13 @@
       "tests": [
         "Future product review"
       ],
-      "notes": "Avoid Dex/Monica complexity until core proven."
+      "notes": "Avoid Dex/Monica complexity until core proven.",
+      "issue_number": 36,
+      "issue_url": "https://github.com/iansherr/alternate/issues/36",
+      "status": "Deferred"
     }
   ],
-  "stage_gate": "No implementation until approved planning gate; do not contact upstream without approval"
+  "stage_gate": "No implementation until approved planning gate; do not contact upstream without approval",
+  "reassessed": "2026-11-21",
+  "revision": 2
 }
