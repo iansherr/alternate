@@ -1,4 +1,4 @@
-# Alternate iOS + KMP — 42-issue project list
+# Alternate iOS + KMP — 44-issue project list
 
 **Status:** planning only; no implementation authorized. GitHub Issues are active; this is a Markdown board, **not an actual GitHub Projects board**. The GitHub connector cannot create/manage Projects at present.
 
@@ -68,9 +68,20 @@ Planning authorization satisfied, prerequisite issues *landed*, exact head check
 | `OPT-02` | [#35](https://github.com/iansherr/alternate/issues/35) — Explore multiple profiles and profile-specific caller labels | Later | optional | Deferred | [CID-04](https://github.com/iansherr/alternate/issues/26) |
 | `OPT-03` | [#36](https://github.com/iansherr/alternate/issues/36) — Explore enhanced relationship metadata or privacy-preserving contact groups | Later | optional | Deferred | [IOS-03](https://github.com/iansherr/alternate/issues/19) |
 
+| `OPT-04` | [#48](https://github.com/iansherr/alternate/issues/48) — Evaluate ContactProvider on iOS for Messages name resolution | Later | optional | Deferred | [P0-03](https://github.com/iansherr/alternate/issues/4), [SEC-01](https://github.com/iansherr/alternate/issues/39), [CID-04](https://github.com/iansherr/alternate/issues/26) |
+| `OPT-05` | [#49](https://github.com/iansherr/alternate/issues/49) — Research macOS Messages sender aliases without exposing private contacts | Later | optional | Deferred | [P0-02](https://github.com/iansherr/alternate/issues/3), [SEC-01](https://github.com/iansherr/alternate/issues/39), [UX-01](https://github.com/iansherr/alternate/issues/40) |
+
 ## Protection of upstream and parallel work
 - Before claiming: read upstream main/AGENTS or contributing guidelines, current PRs and repo issue list, inspect exact changed paths and active owners.
 - Every PR is small, independently testable and uniquely owned. Dependencies, behavior lineage, code ownership and evidence must be durable.
 - Avoid squash or force update of unlanded dependent branches. Never close an issue only because CI is green or a PR is open.
 - Don't post to upstream without explicit approval. Upstream [#39](https://github.com/BioHazard786/Alternate/issues/39) profiles and [#40](https://github.com/BioHazard786/Alternate/issues/40) backups remain distinct.
 - Unknown GitHub Project status must be described honestly; this board can be imported into a native project later.
+
+## Current bounded PR dependency state (2026-11-21)
+- Draft [#44](https://github.com/iansherr/alternate/pull/44): green Android CI baseline, still unmerged.
+- Draft [#45](https://github.com/iansherr/alternate/pull/45): planning and issue tracker (this branch), still unmerged.
+- Draft [#46](https://github.com/iansherr/alternate/pull/46): green additive KMP Android/iOS simulator compile and executed Android host tests; not a full product.
+- Draft [#47](https://github.com/iansherr/alternate/pull/47): green unsigned native Call Directory extension packaging; not a real-device call test.
+- **Stacked** draft [#50](https://github.com/iansherr/alternate/pull/50) based on #47: explicit consented App Group number+alias index and negative tests. No merge/rebase that discards #47 lineage; preserve exact-head CI and source provenance. No full Contacts DB or native iPhone call behavior claimed.
+- Optional investigations [#48](https://github.com/iansherr/alternate/issues/48) and [#49](https://github.com/iansherr/alternate/issues/49) are deferred; no expansion of MVP into Messages or system-wide Contacts.
