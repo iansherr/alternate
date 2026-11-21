@@ -41,3 +41,9 @@ E. Render either shared Compose UI or native SwiftUI contact view, chosen on evi
 - [ ] Obtain actual iOS signed device caller-ID evidence.
 - [ ] One KMP data/model test passes on both targets.
 - [ ] Owner approves shared UI or SwiftUI decision and upstream maintenance strategy.
+
+## Spike evidence (November 21, 2026)
+- [Draft additive KMP proof PR #46](https://github.com/iansherr/alternate/pull/46), head at first iOS compile `a4dd9853be16b61ce0c1ea8515e344776afeab99`, introduces a new `:shared-core` KMP Android+iOS library without modifying existing Android source.
+- The macOS 26 / Xcode **26.4.1** job [run #44917159244](https://github.com/iansherr/alternate/actions/runs/44917159244) reported `:shared-core:compileKotlinIosSimulatorArm64` **BUILD SUCCESSFUL**, verifying Kotlin/Native iOS-simulator compilation on the existing toolchain.
+- This **does not** validate a working iOS application, Room on iOS, or OS caller identification. Android build and KMP test coverage remain separate acceptance requirements.
+- Important: the published Kotlin-AGP/Gradle version support table is conservative; actual simulator compilation succeeding is more useful than treating the version mismatch as an absolute blocker. Keep warning but distinguish *supported range* from *observed run*.
