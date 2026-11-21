@@ -1,6 +1,8 @@
 name: KMP shared core experiment
 
 on:
+  push:
+    branches: [spike/kmp-shared-core]
   pull_request:
     branches: [main]
     paths:
