@@ -42,6 +42,7 @@ No code implementation or upstream posts before approval of Gate A. No unverifie
 
 GitHub Issues are enabled. A native GitHub Projects board has **not** been created through the available connector; the [project board Markdown](PROJECT_BOARD.md) is the current project list.
 ## Feasibility evidence (read before claiming code)
+- [Verified exact-head build proofs — Android, KMP, Call Directory](FEASIBILITY_RESULTS_2026-11-21.md): all three independent draft PRs have green CI as of November 21; no signed real-device caller-ID proof or migration test yet.
 - [Exact-head Android source/baseline audit](BASELINE_AUDIT.md): Kotlin 2.4.21 + AGP 9.5.1 + Gradle 9.9.1 outside published fully-tested matrix, Android app ID/schema and migration fixtures, ordinary Room vs encryption, and `android:allowBackup=true`. **Static only; runtime tests not yet verified.**
 - [ADR-001 architecture options](ADR-001_ARCHITECTURE.md): proposed additive KMP shared library, SwiftUI/Compose decision and reversible fallback.
 - [Native iPhone Call Directory spike contract](IOS_CALL_DIRECTORY_SPIKE.md): signing prerequisites, OS privacy limitations and physical-device pass/fail matrix.
