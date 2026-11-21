@@ -1,4 +1,4 @@
-# Alternate iOS port — 42 linked GitHub issues
+# Alternate iOS port — 44 linked GitHub issues
 
 Each numbered ticket has a stable ID, upstream-safe scope, acceptance criteria, verification and dependencies. **All implementation remains gated.**
 
@@ -892,3 +892,39 @@ Each numbered ticket has a stable ID, upstream-safe scope, acceptance criteria, 
 
 ---
 
+
+### [OPT-04](https://github.com/iansherr/alternate/issues/48) — ContactProvider on iOS for Messages name resolution
+
+**Priority:** optional · **Status:** Deferred · **Depends on:** [P0-03](https://github.com/iansherr/alternate/issues/4), [SEC-01](https://github.com/iansherr/alternate/issues/39), [CID-04](https://github.com/iansherr/alternate/issues/26)
+
+**Scope:** Study optional read-only iOS ContactProvider labels in Messages. Evaluate all-system Contacts visibility and compare to Call Directory, including privacy, revocation and conflicts; default OFF and not MVP.
+
+**Acceptance criteria**
+- [ ] Evidence from iOS compatibility, system lookup and revocation tests
+- [ ] Minimal alias/number-only opt-in and no automatic Apple Contacts writes
+- [ ] Document broader OS exposure and consent trade-off
+- [ ] Go/no-go ADR approved before any code
+
+**Verification**
+- [ ] Synthetic contact on signed iPhone if implementation separately authorized
+- [ ] Validate enable/disable and competing contact behavior
+
+---
+
+### [OPT-05](https://github.com/iansherr/alternate/issues/49) — macOS Messages aliases without private contact disclosure
+
+**Priority:** optional · **Status:** Deferred · **Depends on:** [P0-02](https://github.com/iansherr/alternate/issues/3), [SEC-01](https://github.com/iansherr/alternate/issues/39), [UX-01](https://github.com/iansherr/alternate/issues/40)
+
+**Scope:** Research native macOS Messages identity resolution API availability, whether a local-only dedicated Contacts source or explicit alias+number vCard export can work, and implications for other system apps, accidental calls and syncing.
+
+**Acceptance criteria**
+- [ ] Find supported public API or document lack of equivalent to iOS Call Directory
+- [ ] Account/backup/sync/duplication/privacy matrix for Mac Contacts compromises
+- [ ] Default no automatic publication, no unsupported database mutation
+- [ ] User-approved decision before macOS implementation
+
+**Verification**
+- [ ] Synthetic macOS Contacts + Messages test if separately authorized
+- [ ] Reversal/cleanup test and consent UX review
+
+---
