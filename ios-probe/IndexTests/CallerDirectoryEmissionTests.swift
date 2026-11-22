@@ -37,7 +37,8 @@ final class CallerDirectoryEmissionTests: XCTestCase {
     }
 
     func testOptOutAndAbsentSnapshotClearIncrementalEntries() {
-        for snapshot: CallerIndexSnapshot? in [CallerIndexSnapshot.disabled, nil] {
+        let cases: [CallerIndexSnapshot?] = [CallerIndexSnapshot.disabled, nil]
+        for snapshot in cases {
             let sink = FakeDirectorySink()
             CallerDirectoryEmission.apply(snapshot: snapshot, incremental: true, to: sink)
             XCTAssertEqual(sink.events, ["clear"])
