@@ -2,7 +2,7 @@ name: iOS Call Directory packaging probe
 
 on:
   pull_request:
-    branches: [main, spike/ios-call-directory-probe]
+    branches: [main, spike/ios-call-directory-probe, spike/ios-consented-index]
     paths:
       - "ios-probe/**"
       - ".github/workflows/ios-call-directory-probe.yml"
