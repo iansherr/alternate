@@ -31,7 +31,8 @@ class MigrationTest {
     }
 
     @Test
-    fun migratesCallerInfoToContactsAndPhones() = runBlocking {
+    fun migratesCallerInfoToContactsAndPhones() {
+        runBlocking {
         context.deleteDatabase(name)
         val path = context.getDatabasePath(name)
         SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
@@ -57,6 +58,7 @@ class MigrationTest {
         assertEquals("Mobile", phone.label); assertEquals("919876543210", phone.fullPhoneNumber)
         assertEquals(ravi.id, phone.contactId)
         room.close(); context.deleteDatabase(name)
+        }
     }
     /**
      * Covers the complete 2 -> 3 -> 4 -> 5 upgrade chain using synthetic
@@ -67,7 +69,8 @@ class MigrationTest {
      * schema incompatibilities in the retained SQL migration code.
      */
     @Test
-    fun migratesV2ThroughV5PreservingNumbersAndLocations() = runBlocking {
+    fun migratesV2ThroughV5PreservingNumbersAndLocations() {
+        runBlocking {
         val databaseName = "migration-v2-to-v5-test.db"
         context.deleteDatabase(databaseName)
         val path = context.getDatabasePath(databaseName)
@@ -124,6 +127,7 @@ class MigrationTest {
         } finally {
             room.close()
             context.deleteDatabase(databaseName)
+        }
         }
     }
 
