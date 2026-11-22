@@ -28,3 +28,9 @@ GitHub CI runs Swift unit tests followed by an unsigned simulator build. Tests c
 - The source is in a stacked PR; its base PR must be retired carefully and required behavior must actually land before marking this work complete.
 
 See [CID-01](https://github.com/iansherr/alternate/issues/23), [CID-03](https://github.com/iansherr/alternate/issues/25), [security design](https://github.com/iansherr/alternate/issues/39), and [base native extension](https://github.com/iansherr/alternate/pull/47).
+
+## Simulator and Call Directory emission tests (stacked draft)
+- The OS-owned `CXCallDirectoryExtensionContext` cannot be directly initialized in tests, so a very small `CallerDirectoryEntrySink` abstraction allows asserting every label, ordering, incremental clear, non-consent and malformed-data case without fake Phone behavior.
+- Standalone `swift test --parallel` runs the emission tests and the existing strict-index tests without a physical iPhone.
+- The macOS GitHub workflow also boots an available iPhone simulator, installs the unsigned test host and runs `ProbeUITests` to check the privacy disclosure, explicit publish/disable controls and failure-safe extension-status UI.
+- **Simulator UI tests do not establish actual incoming-call identification.** That remains a signed physical-iPhone acceptance gate.
