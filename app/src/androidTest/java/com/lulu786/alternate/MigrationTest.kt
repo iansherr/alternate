@@ -60,4 +60,75 @@ class MigrationTest {
         room.close(); context.deleteDatabase(name)
         }
     }
+    /**
+     * Covers the complete 2 -> 3 -> 4 -> 5 upgrade chain using synthetic
+     * pre-3.x rows, not just the v4 -> v5 migration.
+     *
+     * This is not a replacement for upgrading a signed historical APK, but
+     * it detects accidental deletion, country-code parsing changes, or
+     * schema incompatibilities in the retained SQL migration code.
+     */
+    @Test
+    fun migratesV2ThroughV5PreservingNumbersAndLocations() {
+        runBlocking {
+        val databaseName = "migration-v2-to-v5-test.db"
+        context.deleteDatabase(databaseName)
+        val path = context.getDatabasePath(databaseName)
+
+        SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
+            db.execSQL(
+                """
+                CREATE TABLE caller_info (
+                    phoneNumber TEXT PRIMARY KEY NOT NULL,
+                    countryCode TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    appointment TEXT NOT NULL,
+                    city TEXT NOT NULL,
+                    iosRow TEXT NOT NULL
+                )
+                """.trimIndent()
+            )
+
+            fun insert(number: String, country: String, name: String, city: String) {
+                db.insertOrThrow("caller_info", null, ContentValues().apply {
+                    put("phoneNumber", number)
+                    put("countryCode", country)
+                    put("name", name)
+                    put("appointment", "Synthetic Test")
+                    put("city", city)
+                    put("iosRow", "")
+                })
+            }
+
+            insert("12025550124", "US", "Fictional US", "Seattle")
+            insert("919876543210", "IN", "Fictional IN", "Dehradun")
+            db.version = 2
+        }
+
+        val room = Room.databaseBuilder(context, AppDatabase::class.java, databaseName)
+            .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+            .build()
+        try {
+            val contacts = room.dao().allContacts()
+            assertEquals(2, contacts.size)
+            assertEquals(setOf("Fictional US", "Fictional IN"), contacts.map { it.name }.toSet())
+            assertEquals("Seattle", contacts.single { it.name == "Fictional US" }.location)
+            assertEquals("Dehradun", contacts.single { it.name == "Fictional IN" }.location)
+
+            val us = room.dao().lookup("2025550124")
+            val india = room.dao().lookup("9876543210")
+            assertEquals("12025550124", us?.fullPhoneNumber)
+            assertEquals("919876543210", india?.fullPhoneNumber)
+            assertEquals("US", us?.countryCode)
+            assertEquals("IN", india?.countryCode)
+            assertEquals("Mobile", us?.label)
+            assertEquals("Mobile", india?.label)
+            assertTrue(contacts.all { it.notes.isEmpty() }, "Unspecified 2.x notes should be empty")
+        } finally {
+            room.close()
+            context.deleteDatabase(databaseName)
+        }
+        }
+    }
+
 }

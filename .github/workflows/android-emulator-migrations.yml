@@ -3,7 +3,7 @@ name: Android instrumented migration baseline
 # Fork-local, no release signing and no write-capable GitHub token.
 on:
   pull_request:
-    branches: [ci/android-pr-baseline]
+    branches: [ci/android-pr-baseline, ci/android-emulator-migrations]
     paths:
       - ".github/workflows/android-emulator-migrations.yml"
       - "app/src/androidTest/**"
@@ -62,7 +62,7 @@ jobs:
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: ./gradlew :app:connectedDebugAndroidTest --stacktrace --no-daemon
 
-      - name: Report exact instrumented failures
+      - name: Report exact instrumented test failures and test count
         if: always()
         run: |
           python3 - <<'PY'
@@ -79,14 +79,14 @@ jobs:
                   continue
               for case in root.iter("testcase"):
                   total += 1
-                  errs = case.findall("failure") + case.findall("error")
-                  if errs:
+                  errors = case.findall("failure") + case.findall("error")
+                  if errors:
                       fail += 1
                       print("FAILED:", case.get("classname"), case.get("name"))
-                      for err in errs:
+                      for err in errors:
                           print("Message:", (err.get("message") or "")[:1500])
                           print("Trace:", (err.text or "")[:3500])
-          print(f"Instrumentation cases={total}, failures={fail}")
+          print(f"Android instrumentation cases={total}, failures={fail}")
           if not paths:
-              print("No XML results. Candidate causes: instrumentation process failed before executing tests.")
+              print("Missing result XML: check instrumented test process startup/installation and AGP output paths")
           PY
