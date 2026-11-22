@@ -41,3 +41,15 @@ targets:
         CODE_SIGN_ENTITLEMENTS: Extension/Extension.entitlements
         GENERATE_INFOPLIST_FILE: NO
         INFOPLIST_FILE: Extension/Info.plist
+
+  ProbeUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: UITests
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: dev.alternate.calleridprobe.uitests
+    dependencies:
+      - target: ProbeApp

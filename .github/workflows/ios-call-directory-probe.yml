@@ -2,7 +2,7 @@ name: iOS Call Directory packaging probe
 
 on:
   pull_request:
-    branches: [main, spike/ios-call-directory-probe]
+    branches: [main, spike/ios-call-directory-probe, spike/ios-consented-index]
     paths:
       - "ios-probe/**"
       - ".github/workflows/ios-call-directory-probe.yml"
@@ -51,3 +51,30 @@ jobs:
           test -d "$EXT"
           plutil -extract NSExtension.NSExtensionPointIdentifier raw -o - "$EXT/Info.plist" | grep -qx 'com.apple.callkit.call-directory'
           echo "Call Directory extension embedded and identified in built host."
+
+      - name: Install, launch and UI-test on iOS simulator
+        working-directory: ios-probe
+        timeout-minutes: 25
+        run: |
+          set -euo pipefail
+          xcrun simctl list devices available
+          DEVICE="$(xcrun simctl list devices available -j | python3 -c '
+          import json,sys
+          data=json.load(sys.stdin)["devices"]
+          for runtime, devices in data.items():
+              if "iOS" in runtime:
+                  for device in devices:
+                      if device.get("isAvailable") and "iPhone" in device["name"]:
+                          print(device["udid"]);sys.exit(0)
+          sys.exit(2)
+          ')"
+          xcrun simctl boot "$DEVICE"
+          xcrun simctl bootstatus "$DEVICE" -b
+          APP=".build/Build/Products/Debug-iphonesimulator/ProbeApp.app"
+          xcrun simctl install "$DEVICE" "$APP"
+          xcrun simctl launch "$DEVICE" dev.alternate.calleridprobe
+          xcodebuild test -project CallerIdProbe.xcodeproj -scheme ProbeApp \
+            -configuration Debug -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,id=$DEVICE" \
+            -only-testing:ProbeUITests \
+            -derivedDataPath .build CODE_SIGNING_ALLOWED=NO
