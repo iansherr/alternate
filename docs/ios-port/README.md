@@ -50,6 +50,9 @@ GitHub Issues are enabled. A native GitHub Projects board has **not** been creat
 
 These files are planning evidence and should not be construed as proven Android/iOS functional acceptance. Source code and fork main remain unchanged.
 
+## Hardware-free verification
+- [Test coverage, exact GitHub Actions evidence and remaining device-only gates](HARDWARE_FREE_TEST_MATRIX.md). Includes standalone Android emulator migration and native iOS simulator experiments; draft/unmerged only.
+
 ## Real-device acceptance handoff
 - [Signed iPhone caller ID test and privacy matrix](REAL_DEVICE_HANDOFF.md) — required for real native Phone identification; no physical call verified.
 
