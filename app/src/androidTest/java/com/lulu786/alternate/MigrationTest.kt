@@ -31,7 +31,8 @@ class MigrationTest {
     }
 
     @Test
-    fun migratesCallerInfoToContactsAndPhones() = runBlocking {
+    fun migratesCallerInfoToContactsAndPhones() {
+        runBlocking {
         context.deleteDatabase(name)
         val path = context.getDatabasePath(name)
         SQLiteDatabase.openOrCreateDatabase(path, null).use { db ->
@@ -57,5 +58,6 @@ class MigrationTest {
         assertEquals("Mobile", phone.label); assertEquals("919876543210", phone.fullPhoneNumber)
         assertEquals(ravi.id, phone.contactId)
         room.close(); context.deleteDatabase(name)
+        }
     }
 }
