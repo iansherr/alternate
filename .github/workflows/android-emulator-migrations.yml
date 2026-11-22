@@ -61,3 +61,32 @@ jobs:
           disable-animations: true
           emulator-options: -no-snapshot -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           script: ./gradlew :app:connectedDebugAndroidTest --stacktrace --no-daemon
+
+      - name: Report exact instrumented failures
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import glob
+          import xml.etree.ElementTree as ET
+
+          paths = glob.glob("app/build/outputs/androidTest-results/**/*.xml", recursive=True)
+          print(f"Found {len(paths)} Android instrumentation result XML files")
+          total, fail = 0, 0
+          for path in paths:
+              try:
+                  root = ET.parse(path).getroot()
+              except ET.ParseError:
+                  continue
+              for case in root.iter("testcase"):
+                  total += 1
+                  errs = case.findall("failure") + case.findall("error")
+                  if errs:
+                      fail += 1
+                      print("FAILED:", case.get("classname"), case.get("name"))
+                      for err in errs:
+                          print("Message:", (err.get("message") or "")[:1500])
+                          print("Trace:", (err.text or "")[:3500])
+          print(f"Instrumentation cases={total}, failures={fail}")
+          if not paths:
+              print("No XML results. Candidate causes: instrumentation process failed before executing tests.")
+          PY
