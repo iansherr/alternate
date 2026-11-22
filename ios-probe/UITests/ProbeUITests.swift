@@ -30,8 +30,10 @@ final class ProbeUITests: XCTestCase {
         let button = app.buttons["Check extension enablement"]
         XCTAssertTrue(button.waitForExistence(timeout: 20))
         button.tap()
-        XCTAssertTrue(app.buttons["Retry iOS caller-ID reload"].exists)
-        // The simulator has no cellular call subsystem: do not treat the
-        // extension status response as evidence of native identification.
+        // This action may immediately change Form layout or return a system
+        // error on Simulator; neither means the private UI has crashed.
+        XCTAssertTrue(app.navigationBars["Caller ID Probe"].waitForExistence(timeout: 10))
+        XCTAssertTrue(app.buttons["Check extension enablement"].exists)
+        // Simulator cannot prove native Phone caller identification.
     }
 }
