@@ -3,7 +3,7 @@ name: Android instrumented migration baseline
 # Fork-local, no release signing and no write-capable GitHub token.
 on:
   pull_request:
-    branches: [ci/android-pr-baseline]
+    branches: [ci/android-pr-baseline, ci/android-emulator-migrations]
     paths:
       - ".github/workflows/android-emulator-migrations.yml"
       - "app/src/androidTest/**"
